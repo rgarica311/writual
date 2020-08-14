@@ -1,0 +1,33 @@
+.r-textTransform-tsynxw  {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+}
+
+.r-textTransform-tsynxw:before {
+    z-index: -2;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: inherit;
+}
+
+.r-textTransform-tsynxw:after {
+    position: absolute;
+    z-index: -1;
+    top: .125em;
+    right: .125em;
+    bottom: .125em;
+    left: .125em;
+    background-color: red;
+    height: 225px;
+    width: 250px;
+    
+}
+
+.r-textTransform-tsynxw:before,
+.r-textTransform-tsynxw:after {
+    position: absolute;
+    content: '';
+}

@@ -1,0 +1,32 @@
+
+.tab {
+    background-color: #454545;
+    height: 55px;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.tab:hover {
+    border-bottom: 2px solid white;
+    cursor: pointer;
+}
+
+.tab:visited {
+    border-bottom: 2px solid white;
+}
+
+.tabText {
+    color: #EDEDED;
+}
+
+.r-borderBottomColor-mvo174:hover {
+    background-color: #A9BCD0;
+}
+
+.r-borderBottomColor-1j1vvil:hover {
+    background-color:  #A9BCD0
+}

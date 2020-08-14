@@ -1,0 +1,10 @@
+div.DraftEditor-root {
+  max-height: 840px;
+  
+  overflow-y: auto;
+}
+
+div.DraftEditor-editorContainer,
+div.public-DraftEditor-content {
+  height: 100%;
+}

@@ -1,0 +1,103 @@
+.frameWorksContainer {
+  position: relative;
+  background-color: #BFC5BD;
+  width: 100vw;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  top: 200px;
+}
+
+.frameWorkCard {
+  height: 350px;
+  width: 250px;
+  position: relative;
+  margin-bottom: 20px;
+
+}
+
+.cardTop {
+  height: 40%;
+  width: 100%;
+  background: rgb(191,197,189);
+  background: radial-gradient(circle, rgba(191,197,189,1) 0%, rgba(13,50,77,1) 100%);
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+  font-family: 'Coustard', serif;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.cardImg {
+  height: 40%;
+  width: 35%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 15%;
+  border: 2px solid black;
+}
+
+.cardBottom {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: flex-end;
+  padding: 10px;
+  line-height: 1.4em;
+  padding-bottom: 25px;
+  background-color: white;
+  font-size: .7rem;
+  font-family: 'Coustard', serif;
+}
+
+.download {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: aliceblue;
+  width: 100%;
+  height: 10%;
+  border: none;
+  font-family: 'Coustard', serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.download:hover {
+  cursor: pointer;
+  background-color: #0D324D;
+  color: white;
+}
+
+.storyH1 {
+  margin: 0 auto;
+  width: 100%;
+  height: 50px;
+  position: absolute;
+  background-color: #BFC5BD;
+  text-align: center;
+  top: 150px;
+  z-index: 1;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 300;
+}
+
+@media screen and (max-width: 749px){
+  .storyH1 {
+    z-index: 0;
+  }
+}

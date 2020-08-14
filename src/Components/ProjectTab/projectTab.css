@@ -1,0 +1,11 @@
+.item {
+   
+    background-color: #0D1F2D;
+    border-bottom-color: #293E4F;
+    border-bottom-width: 1;
+    cursor: pointer; 
+    justify-content: space-evenly;
+    padding: 10;
+    max-height: 85;
+        
+}
