@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Platform } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import GoogleButton from 'react-google-button/dist/react-google-button'
 import WritualContext from '../../WritualContext'
@@ -44,7 +44,8 @@ export default class Login extends Component {
                 writual: {
                     fontFamily: 'Courier',
                     fontWeight: 'bold',
-                    fontSize: 20
+                    fontSize: 20,
+                    textAlign: "center",
                 },
 
                 image: {
@@ -102,7 +103,12 @@ export default class Login extends Component {
                     <View style={{ height: "100%", padding: 5, justifyContent: 'space-evenly', alignItems: 'center'}}>
                         <Text style={styles.writual}>Writual Login</Text>
                         <Image style={styles.image} source={require('../../Assets/logo.png')}/>
-                        <GoogleButton onClick={e => context.handleGoogleLogin(this.state.history)}/>
+                        {
+                            Platform.OS !== 'web'
+                                ? <Text style={styles.writual}>For now, Writual is best experienced on a laptop or desktop. Native iOS and Android apps are on the way!</Text>
+                                : <GoogleButton onClick={e => context.handleGoogleLogin(this.state.history)}/>
+                        }
+                        
                     </View>
                 </View>  
             )}
