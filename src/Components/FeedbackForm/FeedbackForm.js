@@ -71,7 +71,7 @@ export default class FeedbackFrom extends Component {
                         'Authorization': await this.state.getAuthToken()
                     },
                     body: JSON.stringify(userFeedback)
-                }).then(() => {window.location.assign('https://writualapp.com/')})
+                }).then(() => window.location.assign('https://writualapp.com/'))
             } catch (error) {
                 console.error('error submitting feedback: ', error)
                 window.location.assign('https://writualapp.com/')
