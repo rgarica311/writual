@@ -47,7 +47,7 @@ export default class Login extends Component {
 
                 logo: {
                     width: 55,
-                    height: 50,
+                    height: 55,
                     marginTop: 10,
                     marginLeft: 10
                 },
@@ -150,7 +150,7 @@ export default class Login extends Component {
                         
                         <View style={styles.loginContainer}>
                             <Text style={styles.writualIs}>Writual is story development made easy</Text>
-                            <Text style={styles.writualCan}>Create, characters, scenes, treatments, collaborate and get feedback all in one place...</Text>
+                            <Text style={styles.writualCan}>Create characters, scenes, treatments, collaborate and get feedback all in one place...</Text>
                            
                             {
                                 isMobile

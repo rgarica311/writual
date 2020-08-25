@@ -34,7 +34,7 @@ export default class DetailTab extends Component {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                width: '20%',
+                width: '15%',
                 minWidth: 120,
                 padding: 5,
                 height: 80,

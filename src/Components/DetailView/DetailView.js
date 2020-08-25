@@ -13,6 +13,7 @@ import ActContainer from '../ActContainer/ActContainer'
 import ShareComponent from '../ShareComponent/ShareComponent'
 import TreatmentEditor from '../TreatmentEditor/TreatmentEditor'
 import Welcome from '../Welcome/Welcome'
+import FeedbackForm from '../FeedbackForm/FeedbackForm'
 
 import colorSwatches from '../../colorSwatches'
 
@@ -241,7 +242,9 @@ export default class DetailView extends Component {
 
                         </View>
 
-                      : <Welcome/>
+                      : context.currentTab === "Submit Feedback" 
+                        ? <FeedbackForm getAuthToken={context.getAuthToken} />
+                        : <Welcome/>
             }
             {
                 context.renderShareComponent === true
