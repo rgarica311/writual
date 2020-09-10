@@ -9,9 +9,9 @@ export default class ProjectDetails extends Component {
     constructor(props){
         super(props)
         this.state = {
-            tabTitles: ['Overview', 'Characters', 'Scenes', 'Treatment', 'Submit Beta Feedback'],
+            tabTitles: ['Overview', 'Characters', 'Scenes', 'Treatment', 'Screenplay', 'Submit Beta Feedback'],
             tvTabTitles: ['Overview', 'Characters'],
-            episodeTabTitles: ['Overview', 'Scenes', 'Treatment'],
+            episodeTabTitles: ['Overview', 'Scenes', 'Treatment', 'Screenplay'],
             renderProfileMenu: false, 
             windowHeight: this.props.windowHeight,
             windowWidth: this.props.windowWidth

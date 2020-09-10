@@ -12,6 +12,7 @@ import Login from '../Login/Login'
 import ActContainer from '../ActContainer/ActContainer'
 import ShareComponent from '../ShareComponent/ShareComponent'
 import TreatmentEditor from '../TreatmentEditor/TreatmentEditor'
+import ScreenplayEditor from '../Screenplay/Screenplay'
 import Welcome from '../Welcome/Welcome'
 import FeedbackForm from '../FeedbackForm/FeedbackForm'
 
@@ -117,6 +118,19 @@ export default class DetailView extends Component {
       treatmentViewContainer: {
         width: '90%',
         height: 900,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        overFlowY: "auto",
+        filter: "drop-shadow(0 0 .25rem grey)",
+        flexDirection: "row",
+        alignSelf: 'flex-start',
+        justifyContent: 'center',
+        alignItems: 'center'
+      },
+
+      screenplayViewContainer: {
+        width: 768,
+        height: 1056,
         backgroundColor: 'white',
         borderRadius: 8,
         overFlowY: "auto",
@@ -278,9 +292,40 @@ export default class DetailView extends Component {
 
                         </View>
 
-                      : context.currentTab === "Submit Beta Feedback" 
-                        ? <FeedbackForm getAuthToken={context.getAuthToken} />
-                        : <Welcome/>
+                      : context.currentTab === "Screenplay" 
+                          
+                        ? <ScreenplayEditor  currentProj={context.currentProj}
+                                                project_id={context.currentProj !== undefined 
+                                                              ? context.sharedProjClicked 
+                                                                  ? context.sharedProjects.find(proj => proj.title === context.currentProj) !== undefined 
+                                                                      ? context.sharedProjects.find(proj => proj.title === context.currentProj).id
+                                                                      : context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj).project_id 
+                                                                  : context.projects.find(proj => proj.title === context.currentProj) !== undefined 
+                                                                      ? context.projects.find(proj => proj.title === context.currentProj).id
+                                                                      : context.episodes.find(proj => proj.episode_title === context.currentProj).project_id
+                                                              : null}
+                                                episode_id={context.currentProj !== undefined
+                                                              ? context.sharedProjClicked
+                                                                  ? context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj) !== undefined 
+                                                                      ? context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj).id 
+                                                                      : null
+                                                                  : context.episodes.find(proj => proj.episode_title === context.currentProj) !== undefined 
+                                                                    ? context.episodes.find(proj => proj.episode_title === context.currentProj).uni_id
+                                                                    : null
+                                                              : null}
+                                                getAuthToken={context.getAuthToken} 
+                                                
+                                                getEditorState={context.getEditorState} 
+                                                editorState={context.editorState}
+                                                updateProjectTreatment={context.updateProjectTreatment}
+                                                projects={context.projects}
+                                                sharedProjects={context.sharedProjects}
+                                                windowHeight={this.state.windowHeight}
+                                                windowWidth={this.state.windowWidth} />
+                          
+                        : context.currentTab === "Submit Beta Feedback" 
+                            ? <FeedbackForm getAuthToken={context.getAuthToken} />
+                            : <Welcome/>
             }
             {
                 context.renderShareComponent === true
