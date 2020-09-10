@@ -64,8 +64,8 @@ export default class Login extends Component {
 
                 authContainerLogin: {
                     backgroundColor: isMobile ? "white" : whiteSmoke,
-                    height: isMobile ? hp('100%') : "100%",
-                    width: isMobile ? wp('100%') : "100%",
+                    height: isMobile ? hp('100%') : "100vh",
+                    width: isMobile ? wp('100%') : "100vw",
                                     
                 },
 

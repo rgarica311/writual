@@ -158,7 +158,43 @@ export default class DetailView extends Component {
                     </Text>
                     <Text style={styles.overviewHeader}>Overview</Text>
                   </View>
-                  <Overview windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight} />
+                  <Overview currentProjId={context.current_project_id} 
+                            getAuthToken={context.getAuthToken} 
+                            getAllUserProjects={context.getAllUserProjects}
+                            projformat={context.currentProjFormat} 
+                            windowWidth={this.state.windowWidth} 
+                            windowHeight={this.state.windowHeight}
+                            currentProj={context.currentProj}
+                            sharedProjClicked={context.sharedProjClicked}
+                            loglineEpShared={context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id).logline : null}
+                            loglineProjShared={context.sharedProjects.find(obj => obj.id === context.current_project_id) !== undefined ? context.sharedProjects.find(obj => obj.id === context.current_project_id).logline : null} 
+                            loglineEp={context.episodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.episodes.find(obj => obj.uni_id === context.current_project_id).logline : null}
+                            loglineProj={context.projects.find(obj => obj.id === context.current_project_id) !== undefined ? context.projects.find(obj => obj.id === context.current_project_id).logline : null}
+                            authorEpShared={context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id).author : null}
+                            authorProjShared={context.sharedProjects.find(obj => obj.id === context.current_project_id) !== undefined ? context.sharedProjects.find(obj => obj.id === context.current_project_id).author : null}
+                            authorEp={context.episodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.episodes.find(obj => obj.uni_id === context.current_project_id).author : null}
+                            authorProj={context.projects.find(obj => obj.id === context.current_project_id) !== undefined ? context.projects.find(obj => obj.id === context.current_project_id).author : null}
+                            genreEpShared={context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id).genre : null}
+                            genreProjShared={context.sharedProjects.find(obj => obj.id === context.current_project_id) !== undefined ? context.sharedProjects.find(obj => obj.id === context.current_project_id).genre : null} 
+                            genreEp={context.episodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.episodes.find(obj => obj.uni_id === context.current_project_id).genre : null}
+                            genreProj={context.projects.find(obj => obj.id === context.current_project_id) !== undefined ? context.projects.find(obj => obj.id === context.current_project_id).genre : null} 
+                            projformatEpShared={context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id).projformat : null} 
+                            projformatProjShared={context.sharedProjects.find(obj => obj.id === context.current_project_id) !== undefined ? context.sharedProjects.find(obj => obj.id === context.current_project_id).projformat : null}    
+                            projformatEp={context.episodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.episodes.find(obj => obj.uni_id === context.current_project_id).projformat : null}
+                            projformatProj={context.projects.find(obj => obj.id === context.current_project_id) !== undefined ? context.projects.find(obj => obj.id === context.current_project_id).projformat : null} 
+                            budgetEpShared={context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id).budget : null}  
+                            budgetProjShared={context.sharedProjects.find(obj => obj.id === context.current_project_id) !== undefined ? context.sharedProjects.find(obj => obj.id === context.current_project_id).budget : null} 
+                            budgetEp={context.episodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.episodes.find(obj => obj.uni_id === context.current_project_id).budget : null}
+                            budgetProj={context.projects.find(obj => obj.id === context.current_project_id) !== undefined ? context.projects.find(obj => obj.id === context.current_project_id).budget : null} 
+                            timeperiodEpShared={context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id).timeperiod : null}  
+                            timeperiodProjShared={context.sharedProjects.find(obj => obj.id === context.current_project_id) !== undefined ? context.sharedProjects.find(obj => obj.id === context.current_project_id).timeperiod : null}
+                            timeperiodEp={context.episodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.episodes.find(obj => obj.uni_id === context.current_project_id).timeperiod : null}
+                            timeperiodProj={context.projects.find(obj => obj.id === context.current_project_id) !== undefined ? context.projects.find(obj => obj.id === context.current_project_id).timeperiod : null} 
+                            similarEpShared={context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.sharedEpisodes.find(obj => obj.uni_id === context.current_project_id).similarepisodes : null} 
+                            similarProjShared={context.sharedProjects.find(obj => obj.id === context.current_project_id) !== undefined ? context.sharedProjects.find(obj => obj.id === context.current_project_id).similarprojects : null}
+                            similarEp={context.episodes.find(obj => obj.uni_id === context.current_project_id) !== undefined ? context.episodes.find(obj => obj.uni_id === context.current_project_id).similarepisodes : null}
+                            similarProj={context.projects.find(obj => obj.id === context.current_project_id) !== undefined ? context.projects.find(obj => obj.id === context.current_project_id).similarprojects : null}                  
+                            />
                 </View>
               : context.currentTab === "Characters"
                 ? <View style={{height: this.state.windowHeight - 80, width: this.state.windowWidth - 310, paddingLeft: 50}}>
@@ -242,7 +278,7 @@ export default class DetailView extends Component {
 
                         </View>
 
-                      : context.currentTab === "Submit Feedback" 
+                      : context.currentTab === "Submit Beta Feedback" 
                         ? <FeedbackForm getAuthToken={context.getAuthToken} />
                         : <Welcome/>
             }

@@ -60,6 +60,7 @@ const WritualContext = React.createContext({
   expandTvShowList: () => {},
   framework: {},
   genre: {},
+  getAllUserProjects: () => {},
   getAuthToken: () => {},
   getChatIconUrls: () => {},
   getEditorState: () => {},

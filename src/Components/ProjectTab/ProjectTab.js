@@ -265,16 +265,16 @@ export default class ProjectTab extends Component {
                         ? this.state.episode === false
                             ?  <View pointerEvents='auto' onClick={e => context.onProjectClick(e, this.state.proj, this.state.projformat, this.state.framework, this.state.sharedProj, this.state.shared, this.state.episode_id, this.state.project_id, this.state.episode, this.state.show_title)} style={this.state.projformat === "Television" ? styles.tvItem : styles.item}>
                                         <View style={{ marginLeft: 15, justifyContent: 'center'}}>
-                                            <Text style={context.currentProj === this.state.proj ? styles.activeText : styles.text}>{this.state.proj}</Text>
+                                            <Text style={context.current_project_id === this.state.project_id ? styles.activeText : styles.text}>{this.state.proj}</Text>
                                             <View style={styles.flexRow}> 
-                                                <Text style={context.currentProj === this.state.proj ? styles.activeFormatGenre : styles.formatGenre}>
+                                                <Text style={context.current_project_id === this.state.project_id ? styles.activeFormatGenre : styles.formatGenre}>
                                                     {
                                                         this.state.sharedProj === false
                                                             ? context.projects.find(obj => obj.title === this.state.proj).projformat + " "
                                                             : context.sharedProjects.find(obj => obj.title === this.state.proj).projformat + " "
                                                     }
                                                 </Text>
-                                                <Text style={context.currentProj === this.state.proj ? styles.activeFormatGenre  : styles.formatGenre}>
+                                                <Text style={context.current_project_id === this.state.project_id ? styles.activeFormatGenre  : styles.formatGenre}>
                                                     {
                                                         this.state.sharedProj === false
                                                             ? context.projects.find(obj => obj.title === this.state.proj).genre
@@ -345,7 +345,7 @@ export default class ProjectTab extends Component {
                                                                 <MenuOption  onSelect={this.state.visible === true ? e => context.hideProj(e, this.state.proj, this.state.sharedProj) : e => context.unHideProj(e, this.state.proj, this.state.sharedProj)} style={styles.menuOption}>
                                                                     <View style={styles.iconBox}>
                                                                         <FontAwesomeIcon icon={faEyeSlash} className='fa-sm iconHover' color={
-                                                                                                                                                context.currentProj === this.state.proj 
+                                                                                                                                                context.current_project_id === this.state.project_id 
                                                                                                                                                     ? princetonOrange 
                                                                                                                                                     : this.state.visible === false
                                                                                                                                                         ? princetonOrange
@@ -427,7 +427,7 @@ export default class ProjectTab extends Component {
                                                                                                     } style={styles.menuOption}>
                                                                             <View style={styles.iconBox}>
                                                                                 <FontAwesomeIcon icon={faEyeSlash} className='fa-sm iconHover' color={
-                                                                                                                                                        context.currentProj === this.state.proj 
+                                                                                                                                                        context.current_project_id === this.state.project_id 
                                                                                                                                                             ? princetonOrange 
                                                                                                                                                             : this.state.visible === false
                                                                                                                                                                 ? princetonOrange
@@ -531,7 +531,7 @@ export default class ProjectTab extends Component {
                                                                             onClick={this.state.visible === true 
                                                                                             ? this.state.projformat === 'Episode' ? e => context.hideEpisode(e, this.state.proj, this.state.sharedProj)  : e => context.hideProj(e, this.state.proj, this.state.sharedProj)
                                                                                             : this.state.projformat === 'Episode' ? e => context.unHideEpisode(e, this.state.proj, this.state.sharedProj) : e => context.unHideProj(e, this.state.proj, this.state.sharedProj)}
-                                                                            color={context.currentProj === this.state.proj 
+                                                                            color={context.current_project_id === this.state.project_id 
                                                                                             ? princetonOrange 
                                                                                             : this.state.visible === false
                                                                                                 ? princetonOrange
@@ -547,16 +547,16 @@ export default class ProjectTab extends Component {
                                     <View style={{padding: 10, flex: 1, justifyContent: 'space-evenly'}}>
                                         <View >
                                            
-                                            <Text style={context.currentProj === this.state.episode_title ? styles.activeEpisodeText : styles.episodeText}>{this.state.episode_title}</Text>
+                                            <Text style={context.current_project_id === this.state.project_id ? styles.activeEpisodeText : styles.episodeText}>{this.state.episode_title}</Text>
                                             <View style={styles.flexRow}>
-                                                <Text  style={context.currentProj === this.state.episode_title ? styles.activeFormatGenre : styles.formatGenre}>
+                                                <Text  style={context.current_project_id === this.state.project_id ? styles.activeFormatGenre : styles.formatGenre}>
                                                     {
                                                         this.state.sharedProj 
                                                             ? context.sharedEpisodes.find(ep => ep.episode_title === this.state.episode_title).projformat + ' '
                                                             : context.episodes.find(ep => ep.episode_title === this.state.episode_title).projformat + ' '
                                                     }
                                                 </Text>
-                                                <Text  style={context.currentProj === this.state.episode_title ? styles.activeFormatGenre : styles.formatGenre}>
+                                                <Text  style={context.current_project_id === this.state.project_id ? styles.activeFormatGenre : styles.formatGenre}>
                                                     {
                                                         this.state.sharedProj 
                                                             ? context.sharedEpisodes.find(ep => ep.episode_title === this.state.episode_title).genre

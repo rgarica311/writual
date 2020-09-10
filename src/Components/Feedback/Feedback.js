@@ -296,17 +296,6 @@ componentDidMount = () => {
                         {   
                             this.state.structuredFeedback !== undefined 
                                 ? this.state.structuredFeedback.map(ele => {
-                                    /*structuredFeedback = [
-                                        textEle: {
-                                            reviewer: "rory",
-                                            values: ['text2', 'text2', 'text3']
-                                        },
-
-                                        textEle: {
-                                            reviewer: "rory garcia",
-                                            value: ["text 1"]
-                                        },
-                                    ]*/
                                     return (
                                         <View key={this.state.structuredFeedback.indexOf(ele)} style={{width: "100%"}}>
                                             <Text style={styles.feedbackHeader}>Feedback by {ele.reviewer} </Text>

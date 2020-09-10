@@ -114,6 +114,7 @@ class App extends Component {
       currentActOneStep: undefined,
       currentActTwoStep: undefined,
       currentActThreeStep: undefined,
+      current_project_id: undefined, 
       renderUpArrow: true,
       renderUpTvArrow: true,
       renderSharedUpArrow: true, 
@@ -123,7 +124,7 @@ class App extends Component {
       showHiddenModeEp: false,
       showHiddenModeSharedEp: false,
       openChats: [],
-      socket: io.connect('http://192.168.0.13:8000'),
+      socket: io.connect(url),
       unreadMessagesStatus: [],
       unreadArgs: [],
       unreadMessages: undefined,
@@ -663,7 +664,7 @@ createUnreadArgs = (state) => {
 
 
 }
-
+//figure out how to update context.currentpoj
 getAllUserProjects = async () => {
   //console.log('get all user projects')
   Promise.all([
@@ -679,7 +680,16 @@ getAllUserProjects = async () => {
     })
   })
   .then(() => this.getUnread())
+  if(this.state.current_project_id !== undefined) {
+    console.log('setting currentproj')
+    this.setState({
+      currentProj: this.state.projects.find(obj => obj.id === this.state.current_project_id) !== undefined ? this.state.projects.find(obj => obj.id === this.state.current_project_id).title : this.state.episodes.find(obj => obj.uni_id === this.state.current_project_id).episode_title
+    })
+  }
+  
 }
+
+
 
 
 
@@ -1202,7 +1212,11 @@ handleFormReset = (e) => {
     //console.log(`onProjectClick isEp ${isEpisode}`)
     e.stopPropagation()
     this.setState({
-      currentProj: proj,
+      currentProj: this.state.current_project_id !== undefined 
+                    ? this.state.projects.find(proj => proj.id === this.state.current_project_id) !== undefined 
+                        ? this.state.projects.find(proj => proj.id === this.state.current_project_id).title
+                        : this.state.episodes.find(ep => ep.uni_id === this.state.current_project_id).episode_title
+                    : proj,
       currentProjFormat: projformat,
       currentChar: undefined,
       currentAttribute: undefined, 
@@ -1941,6 +1955,7 @@ handleFormReset = (e) => {
       expandTvShowList: this.expandTvShowList,
       framework: this.state.framework,
       genre: this.state.genre,
+      getAllUserProjects: this.getAllUserProjects,
       getAuthToken: this.getAuthToken,
       getChatIconUrls: this.getChatIconUrls,
       getEditorState: this.getEditorState,
