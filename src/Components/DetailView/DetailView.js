@@ -317,7 +317,7 @@ export default class DetailView extends Component {
                                                 
                                                 getEditorState={context.getEditorState} 
                                                 editorState={context.editorState}
-                                                updateProjectTreatment={context.updateProjectTreatment}
+                                                updateProjectScreenplay={context.updateProjectScreenplay}
                                                 projects={context.projects}
                                                 sharedProjects={context.sharedProjects}
                                                 windowHeight={this.state.windowHeight}

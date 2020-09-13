@@ -168,6 +168,7 @@ const WritualContext = React.createContext({
   unreadMsgs: undefined,
   updateCharacterDetail: {},
   updateProjectTreatment: () => {},
+  updateProjectScreenplay: () => {},
   updateFeedback: () => {},
   updateUser: () => {},
   userAccount: null,

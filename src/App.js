@@ -269,7 +269,9 @@ getAuthToken = async () => {
 
 
 getProjects =  async () => {
-  //console.log('debug connections: get projects running idToken', this.state.idToken)
+  console.log('debug connections: get projects running idToken', this.state.idToken)
+  console.log('url', url)
+
   return new Promise(async (resolve, reject) => {
     if(this.state.getProjectsRan === undefined) {
       this.setState({
@@ -666,7 +668,7 @@ createUnreadArgs = (state) => {
 }
 //figure out how to update context.currentpoj
 getAllUserProjects = async () => {
-  //console.log('get all user projects')
+  console.log('get all user projects')
   Promise.all([
     this.getProjects(),
     this.getSharedProjects(),
@@ -1176,6 +1178,29 @@ handleFormReset = (e) => {
         body: JSON.stringify(updatedTreatment)
       })
       .then(() => this.state.socket.emit('update-treatment', this.state.project_id))
+
+    } catch(error) {
+      console.error(`error: ${error}`)
+    }
+  }
+
+  updateProjectScreenplay = async (raw) => {
+    let updatedScreenplay = {
+      proj_name: this.state.currentProj,
+      project_id: this.state.sharedProjClicked === false ? this.state.projects.find(proj => proj.title === this.state.currentProj).id : this.state.sharedProjects.find(proj => proj.title === this.state.currentProj).id,
+      screenplay: raw,
+    }
+
+    try {
+      await fetch(`${url}/Screenplay`,   {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': await this.getAuthToken()
+        },
+        body: JSON.stringify(updatedScreenplay)
+      })
+      .then(() => this.state.socket.emit('update-screenplay', this.state.project_id))
 
     } catch(error) {
       console.error(`error: ${error}`)
@@ -2057,6 +2082,7 @@ handleFormReset = (e) => {
       unreadMessagesStatus: this.state.unreadMessagesStatus,
       updateCharacterDetail: this.updateCharacterDetail,
       updateProjectTreatment: this.updateProjectTreatment,
+      updateProjectScreenplay: this.updateProjectScreenplay,
       updateFeedback: this.updateFeedback,
       updateUser: this.updateUser,
       userAccount: this.state.userAccount,
