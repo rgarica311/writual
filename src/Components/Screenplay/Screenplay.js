@@ -38,6 +38,26 @@ const elements = {
         
     ]
 }
+const scene_headings = ['int.', 'ext.', 'int./ext.', 'ext./int.', 'INT.', 'EXT.', 'INT./EXT.', 'EXT./INT.']
+const shots = ['close on', 'closer on', 'closeup', 'cu', 'wide', 'wider', 'pov', 'insert', 'angle on', 'dolly', 'push', 'long', 'medium']
+const transitions = [
+  'fade in:', 
+  'fade out:', 
+  'fade to:', 
+  'over black:', 
+  'wipe to:', 
+  'flash cut to:',
+  'freeze frame:',
+  'iris in:',
+  'iris out:',
+  'cut to:',
+  'jumpt cut to:',
+  'match cut to:',
+  'match dissolve to:',
+  'smash cut to:',
+  'stock shot:',
+  'time cut:',
+]
 
 export default class ScreenplayEditor extends Component {
   constructor(props) {
@@ -65,120 +85,120 @@ export default class ScreenplayEditor extends Component {
     };
 
   this.onChange = (editorState) => {
-    console.log('blockmap debug2: onchanged fired')
-    let raw = convertToRaw(editorState.getCurrentContent())
+
+    const raw = convertToRaw(editorState.getCurrentContent())
     const oldContentState = this.state.editorState.getCurrentContent()
-    let currentContentState = editorState.getCurrentContent()
-    
-    let newEditorState = EditorState.moveFocusToEnd(editorState)
+    const currentContentState = editorState.getCurrentContent()
+    const stateWithContent = EditorState.createWithContent(currentContentState)
+    const newEditorState = EditorState.moveFocusToEnd(editorState)
+    let text = editorState.getCurrentContent().getLastBlock().getText()
+
+    const nextOffSet = editorState.getSelection().getFocusOffset() + text.length
+
     if(oldContentState !== currentContentState) {
         this.setState({
             editorState: newEditorState
         }, () => {
-            console.log('blockmap debug2: text in onchange callback', this.state.editorState.getCurrentContent().getLastBlock().getText())
-            let text = editorState.getCurrentContent().getLastBlock().getText()
+
+            console.log('element is: current text:', text)
             const firstBlock = currentContentState.getBlockMap().first()
             const lastBlock = currentContentState.getBlockMap().last()
-            const firstBlockKey = firstBlock.getKey()
-            const lastBlockKey = lastBlock.getKey()
-            const lengthOfLastBlock = lastBlock.getLength()
+           
+            const initialSelectionState = new SelectionState({
+              anchorKey: lastBlock.getKey(),
+              anchorOffset: 0,
+              focusKey: lastBlock.getKey(),
+              focusOffset: lastBlock.getLength()
+            })
 
+            const newSelectionState = new SelectionState({
+              anchorKey: firstBlock.getKey(),
+              anchorOffset: nextOffSet,
+              focusKey: lastBlock.getKey(),
+              focusOffset: nextOffSet
+            })
+                  
+            const inlineStyle = editorState.getCurrentInlineStyle();
+            const isCapital = inlineStyle.has("CAPITALIZE")
+            const isDialogue = inlineStyle.has("DIALOGUE")
+            const isCharacter = inlineStyle.has('CHARACTER')
+
+            let formatSceneHeading = false
+
+            scene_headings.map(heading => {
+              if(text.includes(heading)) {
+                formatSceneHeading = true
+              }
+            })
             
+            if(formatSceneHeading) {
 
-            //console.log(`debug editor: newSelectionState before style application ${newSelectionState}`)
+                console.log(`element is: scene heading`)
+                this.formatSceneHeading(initialSelectionState, currentContentState, stateWithContent)
 
-            if(text.includes('ext.') || text.includes('int.')) {
-                console.log('blockmap debug2: scene heading')
-                const inlineStyle = editorState.getCurrentInlineStyle();
-                const isCapital = inlineStyle.has("CAPITALIZE")
-                
-                const nextOffSet = editorState.getSelection().getFocusOffset() + text.length
+            } else if(!text.includes('int.') && !text.includes('ext.') && !text.includes(' ') && text.length > 1) {
+                console.log(`element is: not scene heading and has no space`)
 
-                let newState = new SelectionState({
-                    anchorKey: firstBlockKey,
-                    anchorOffset: 0,
-                    focusKey: lastBlockKey,
-                    focusOffset: lengthOfLastBlock
-                })
-            
-                const stateWithContent = EditorState.createWithContent(currentContentState)
-
-                let newSelectionState = new SelectionState({
-                    anchorKey: firstBlockKey,
-                    anchorOffset: nextOffSet,
-                    focusKey: lastBlockKey,
-                    focusOffset: nextOffSet
+                const chars = text.split('')
+                let allUpper = true
+                chars.map(char => {
+                  if(char !== char.toUpperCase()) {
+                    allUpper = false
+                  }
                 })
 
-                currentContentState = Modifier.applyInlineStyle(currentContentState, newState, 'CAPITALIZE')
-                console.log(`currentContentState after inlineStyle: ${currentContentState}`)
+                if(allUpper) {
+                  if(!shots.includes(text) && !transitions.includes(text)) {
 
-                const stateWithContentAndSelection = EditorState.push(stateWithContent, currentContentState, 'change-inline-style')
-                //const stateWithContentAndSelection = EditorState.forceSelection(stateWithContent, newSelectionSTate)
-                const stateWithContentAtEnd = EditorState.moveSelectionToEnd(stateWithContentAndSelection)
-                console.log(`stateWithContentAndSelection: ${JSON.stringify(stateWithContentAndSelection)}`)
-                if(!isCapital) {
-                    this.setState({
-                        editorState: stateWithContentAtEnd
-                    }, () => {
-                        console.log(`currentSelection: ${this.state.editorState.getSelection()}`)
-                    })
+                    console.log(`element is: character`)
+                    this.formatCharacterName(initialSelectionState, currentContentState, stateWithContent, isDialogue)
+                    
+                  }  else {
+                      console.log('element is: shot')
+                      if(shots.includes(text)) {
+
+                        console.log(`element is: shot`)
+                        this.formatShot(initialSelectionState, currentContentState, stateWithContent, isDialogue)
+        
+                      } else {
+
+                          console.log(`element is: transition`)
+                          this.formatTransition(initialSelectionState, currentContentState, stateWithContent, isDialogue)
+
+                      }
+                      
+                  }
+                  
+                } else if(!shots.includes(text) && !transitions.includes(text)) {
+                    console.log('element is: not shot or transition or scene heading')
+                           
+                    if (isCharacter) {
+                        console.log(`element is: dialogue`)
+                        this.formatDialogue(initialSelectionState, currentContentState, stateWithContent)
+                    } else {
+                        this.formatAction(initialSelectionState, currentContentState, stateWithContent, '')
+                    }
+                } else {
+                    if(shots.includes(text)) {
+                      console.log('element is: shot and lowercase')
+                      this.formatShot(initialSelectionState, currentContentState, stateWithContent, isDialogue)
+
+                    } 
+                    
                 }
-                
-                //let newEditorState = EditorState.push(editorState, currentContentState, 'change-inline-style')
-                //console.log(`newEditorState: ${JSON.stringify(newEditorState)}`)
-                //return newEditorState
-                //console.log(`debug editor: newEditorState after style application ${JSON.stringify(newEditorState)}`)
-                /*if(!isCapital) {
-                    //let newState = RichUtils.toggleInlineStyle(this.state.editorState, 'CAPITALIZE')
-                    console.log(`isCaptial is ${isCapital}`)
-                    this.setState({
-                        editorState: newEditorState
-                    })
-                }*/
                 
             } else {
-                //console.log(`key command: ${command}`)
-                const currentContentState = this.state.editorState.getCurrentContent()
-                const stateWithContent = EditorState.createWithContent(currentContentState)
-                const inlineStyle = editorState.getCurrentInlineStyle();
-                const isCapital = inlineStyle.has("CAPITALIZE")
-                
-                //console.log(`blockmap debug: command captured: ${command}, isCapital:  ${isCapital}`)
-                
-                if(isCapital) {
-                  console.log(`text: ${text} isCapital: ${isCapital}`)
-                  const firstBlock = currentContentState.getBlockMap().first()
-                  const lastBlock = currentContentState.getBlockMap().last()
-                  const firstBlockKey = firstBlock.getKey()
-                  const lastBlockKey = lastBlock.getKey()
-                  const lengthOfLastBlock = lastBlock.getLength()
-                  console.log(`blockmap debug: lastBlockKey: ${lastBlockKey} firstBlockKey: ${firstBlockKey}`)
-                  console.log(`blockmap debug: lastBlock: ${lastBlock} firstBlock: ${firstBlock}`)
-                  console.log(`blockmap debug: blockMap: ${this.state.editorState.getCurrentContent().getBlockMap()}`)
-                  let newState = new SelectionState({
-                      anchorKey: lastBlockKey,
-                      anchorOffset: 0,
-                      focusKey: lastBlockKey,
-                      focusOffset: lengthOfLastBlock
-                  })
-                  let newContentState = Modifier.removeInlineStyle(currentContentState, newState, 'CAPITALIZE')
-                  //let newContentState = Modifier.applyInlineStyle(prevContentState, newState, 'ACTION')
-                
-                  console.log(`blockmap debug2: after removal: ${newContentState}`)
-                  let newContentWithRemovalSelection = EditorState.push(stateWithContent, newContentState, 'change-inline-stlye')
-                  console.log(`blockmap debug2: newContentWithRemovalSelection: ${JSON.stringify(newContentWithRemovalSelection)}`)
-                  const finalState = EditorState.moveSelectionToEnd(newContentWithRemovalSelection)
-                  this.setState({
-                    editorState: finalState
-                  }, () => {
-                    console.log(`editoState has capital after removal: ${this.state.editorState.getCurrentInlineStyle().has("CAPITALIZE")}`)
-                  })
-                }
-                
-                  
+                console.log('element has space')
+                if(shots.includes(text)) {
+                  console.log('element is: shot and lowercase')
+                  this.formatShot(initialSelectionState, currentContentState, stateWithContent, isDialogue)
 
-                
+                } else if (transitions.includes(text)) {
+                    this.formatTransition(initialSelectionState, currentContentState, stateWithContent, isDialogue)
+
+                } else {
+                    this.formatAction(initialSelectionState, currentContentState, stateWithContent)
+                }
             }
 
             
@@ -195,30 +215,30 @@ export default class ScreenplayEditor extends Component {
 
   };
 
-  this.elementCheck = debounce((text) => {
+  /*this.elementCheck = debounce((text) => {
         console.log('text', text)
   
-        let newState
+        let initialSelectionState
 
         if(text.includes('ext.') || text.incldues('int.')) {
             console.log('scene heading')
-            newState = RichUtils.toggleInlineStyle(this.state.editorState, 'CAPITALIZE')
+            initialSelectionState = RichUtils.toggleInlineStyle(this.state.editorState, 'CAPITALIZE')
             this.setState({
-                editorState: newState
+                editorState: initialSelectionState
             })
 
         } else if (!text.includes('EXT')) {
             console.log('text.includes(EXT)', text.includes('EXT'))
             console.log('elements.scene_headings.includes(text)', elements.scene_headings.includes(text))
             console.log(`elements.scene_headings[0] ${elements.scene_headings[0]}`)
-            newState = RichUtils.toggleInlineStyle(this.state.editorState, 'CENTER')
+            initialSelectionState = RichUtils.toggleInlineStyle(this.state.editorState, 'CENTER')
             this.setState({
-                editorState: newState
+                editorState: initialSelectionState
             })
         }
           
         
-  }, 3000)
+  }, 3000)*/
 
   this.saveScreenplayState = debounce((raw) => {
     this.updateProjectScreenplay(raw)
@@ -235,6 +255,157 @@ export default class ScreenplayEditor extends Component {
   };
 
 }
+
+formatSceneHeading = (initialSelectionState, currentContentState, stateWithContent, isCapital) => {
+  const updatedContentState = Modifier.applyInlineStyle(currentContentState, initialSelectionState, 'CAPITALIZE')
+  console.log(`currentContentState after inlineStyle: ${currentContentState}`)
+
+  const stateWithContentAndSelection = EditorState.push(stateWithContent, updatedContentState, 'change-inline-style')
+  const stateWithContentAtEnd = EditorState.moveSelectionToEnd(stateWithContentAndSelection)
+  console.log(`stateWithContentAndSelection: ${JSON.stringify(stateWithContentAndSelection)}`)
+  if(!isCapital) {
+      this.setState({
+          editorState: stateWithContentAtEnd
+      }, () => {
+          console.log(`currentSelection: ${this.state.editorState.getSelection()}`)
+      })
+  }
+}
+
+formatCharacterName = (initialSelectionState, currentContentState, stateWithContent, isDialogue) => {
+  
+  let newContentState
+  //check if previous element is dialogue
+  if(isDialogue) {
+    console.log(`isDialogue: ${isDialogue}`)
+    const removedDialogueContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, 'DIALOGUE')
+    newContentState = Modifier.applyInlineStyle(removedDialogueContentState, initialSelectionState, 'CHARACTER')
+  } else {
+      newContentState = Modifier.applyInlineStyle(currentContentState, initialSelectionState, 'CHARACTER')
+  }
+  
+  const newEditorStateWithSelection = EditorState.push(stateWithContent, newContentState, 'change-inline-stlye')
+  const finalState = EditorState.moveSelectionToEnd(newEditorStateWithSelection)
+  this.setState({
+    editorState: finalState
+  }, () => {
+    console.log(`editoState has capital after removal: ${this.state.editorState.getCurrentInlineStyle().has("CAPITALIZE")}`)
+  })
+}
+
+formatDialogue = (initialSelectionState, currentContentState, stateWithContent) => {
+
+  const newContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, 'CHARACTER')
+  const DialogueContentState = Modifier.applyInlineStyle(newContentState, initialSelectionState, 'DIALOGUE')
+
+  const DialogueEditorState = EditorState.push(stateWithContent, DialogueContentState, 'change-inline-stlye')
+  const finalState = EditorState.moveSelectionToEnd(DialogueEditorState)
+
+  this.setState({
+    editorState: finalState
+  }, () => {
+    console.log(`editoState has capital after removal: ${this.state.editorState.getCurrentInlineStyle().has("CAPITALIZE")}`)
+  })
+
+}
+
+formatShot = (initialSelectionState, currentContentState, stateWithContent, isDialogue) => {
+
+  let newContentState
+  //check if previous element is dialogue
+  if(isDialogue) {
+    console.log(`isDialogue: ${isDialogue}`)
+    const removedDialogueContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, 'DIALOGUE')
+    newContentState = Modifier.applyInlineStyle(removedDialogueContentState, initialSelectionState, 'SHOT')
+  } else {
+      newContentState = Modifier.applyInlineStyle(currentContentState, initialSelectionState, 'SHOT')
+  }
+  
+  const newEditorStateWithSelection = EditorState.push(stateWithContent, newContentState, 'change-inline-stlye')
+  const finalState = EditorState.moveSelectionToEnd(newEditorStateWithSelection)
+  this.setState({
+    editorState: finalState
+  }, () => {
+    console.log(`editoState has capital after removal: ${this.state.editorState.getCurrentInlineStyle().has("CAPITALIZE")}`)
+  })
+}
+
+formatTransition = (initialSelectionState, currentContentState, stateWithContent, isDialogue) => {
+  let newContentState
+  //check if previous element is dialogue
+  if(isDialogue) {
+    console.log(`isDialogue: ${isDialogue}`)
+    const removedDialogueContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, 'DIALOGUE')
+    newContentState = Modifier.applyInlineStyle(removedDialogueContentState, initialSelectionState, 'TRANSITION')
+  } else {
+      newContentState = Modifier.applyInlineStyle(currentContentState, initialSelectionState, 'TRANSITION')
+  }
+  
+  const newEditorStateWithSelection = EditorState.push(stateWithContent, newContentState, 'change-inline-stlye')
+  const finalState = EditorState.moveSelectionToEnd(newEditorStateWithSelection)
+  this.setState({
+    editorState: finalState
+  }, () => {
+    console.log(`editoState has capital after removal: ${this.state.editorState.getCurrentInlineStyle().has("CAPITALIZE")}`)
+  })
+}
+
+formatSceneHeading = (initialSelectionState, currentContentState, stateWithContent) => {
+  const inlineStyle = this.state.editorState.getCurrentInlineStyle()
+  console.log(`currentInlineStyle: ${inlineStyle}`)
+  let styleToRemove = null
+  let newContentWithRemovalSelection 
+  const styles = ['SHOT', 'TRANSITION', 'DIALOGUE']
+  styles.map(style => {
+    if(inlineStyle.has(style)) {
+      styleToRemove = style
+    }
+  })
+  if(styleToRemove !== null) {
+    const newContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, styleToRemove)
+    const sceneHeadingContentState = Modifier.applyInlineStyle(newContentState, initialSelectionState, 'CAPITALIZE')
+   newContentWithRemovalSelection = EditorState.push(stateWithContent, sceneHeadingContentState, 'change-inline-stlye')
+  } else {
+      const sceneHeadingContentState = Modifier.applyInlineStyle(currentContentState, initialSelectionState, 'CAPITALIZE')
+      newContentWithRemovalSelection = EditorState.push(stateWithContent, sceneHeadingContentState, 'change-inline-stlye')
+  }
+
+  const finalState = EditorState.moveSelectionToEnd(newContentWithRemovalSelection)
+
+  this.setState({
+    editorState: finalState
+  }, () => {
+    console.log(`editoState has capital after removal: ${this.state.editorState.getCurrentInlineStyle().has("CAPITALIZE")}`)
+  })
+}
+
+formatAction = (initialSelectionState, currentContentState, stateWithContent) => {
+  console.log('element is: action... format action running')
+  console.log(`element is: action... initialSelectionState: ${initialSelectionState}`)
+  console.log(`element is: action... currentContentState: ${currentContentState}`)
+
+  const inlineStyle = this.state.editorState.getCurrentInlineStyle()
+  console.log(`currentInlineStyle: ${inlineStyle}`)
+  let styleToRemove
+  const styles = ['CAPITALIZE', 'SHOT']
+  styles.map(style => {
+    if(inlineStyle.has(style)) {
+      styleToRemove = style
+    }
+  })
+  
+  const newContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, styleToRemove)
+  const newContentWithRemovalSelection = EditorState.push(stateWithContent, newContentState, 'change-inline-stlye')
+  const finalState = EditorState.moveSelectionToEnd(newContentWithRemovalSelection)
+
+  this.setState({
+    editorState: finalState
+  }, () => {
+    console.log(`editoState has capital after removal: ${this.state.editorState.getCurrentInlineStyle().has("CAPITALIZE")}`)
+  })
+
+}
+
 
 myKeyBindingFn = (e) => {
   const { hasCommandModifier } = KeyBindingUtil
@@ -263,14 +434,14 @@ myKeyBindingFn = (e) => {
       console.log(`blockmap debug: lastBlockKey: ${lastBlockKey} firstBlockKey: ${firstBlockKey}`)
       console.log(`blockmap debug: lastBlock: ${lastBlock} firstBlock: ${firstBlock}`)
       console.log(`blockmap debug: blockMap: ${this.state.editorState.getCurrentContent().getBlockMap()}`)
-      let newState = new SelectionState({
+      let initialSelectionState = new SelectionState({
           anchorKey: lastBlockKey,
           anchorOffset: 0,
           focusKey: lastBlockKey,
           focusOffset: lengthOfLastBlock
       })
-      let newContentState = Modifier.removeInlineStyle(currentContentState, newState, 'CAPITALIZE')
-      //let newContentState = Modifier.applyInlineStyle(prevContentState, newState, 'ACTION')
+      let newContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, 'CAPITALIZE')
+      //let newContentState = Modifier.applyInlineStyle(prevContentState, initialSelectionState, 'ACTION')
     
       console.log(`blockmap debug2: after removal: ${newContentState}`)
       let newContentWithRemovalSelection = EditorState.push(stateWithContent, newContentState, 'change-inline-stlye')
@@ -422,17 +593,32 @@ componentDidUpdate = async (prevProps) => {
 
     const styleMap = {
         
-        CENTER: {
-            margin: "0 auto"
+        DIALOGUE: {
+            margin: "0 auto",
+            maxWidth: 330
         },
 
         CAPITALIZE: {
             textTransform: 'uppercase'
         },
 
-        ACTION: {
-          textTransform: 'capitalize'
+        CHARACTER: {
+          textTransform: 'uppercase',
+          margin: "0 auto",
+        },
+
+        SHOT: {
+          textTransform: 'uppercase',
+          
+        },
+
+        TRANSITION: {
+          textTransform: 'uppercase',
+          marginLeft: 'auto'
+
         }
+
+        
 
       
     }
@@ -479,8 +665,8 @@ componentDidUpdate = async (prevProps) => {
                                                                                 ref={this.setEditor} 
                                                                                 editorState={this.state.editorState} 
                                                                                 onChange={this.onChange}
-                                                                                //handleKeyCommand={this.handleKeyCommand}
-                                                                                //keyBindingFn={this.myKeyBindingFn}
+                                                                                handleKeyCommand={this.handleKeyCommand}
+                                                                                keyBindingFn={this.myKeyBindingFn}
                                                                                 customStyleMap={styleMap} />
                         </View>
                     </View>
