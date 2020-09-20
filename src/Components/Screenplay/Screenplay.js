@@ -580,12 +580,13 @@ componentDidUpdate = async (prevProps) => {
         },
 
         screenplayViewContainer: {
-            width: 816,
-            height: 1056,
+            width: 820,
+            height: 1060,
             backgroundColor: 'white',
             filter: "drop-shadow(0 0 .25rem grey)",
             alignSelf: 'center',
             padding: 96,
+            paddingLeft: 147
            
         },
 
@@ -604,7 +605,7 @@ componentDidUpdate = async (prevProps) => {
 
         CHARACTER: {
           textTransform: 'uppercase',
-          margin: "0 auto",
+          marginLeft: 190,
         },
 
         SHOT: {
