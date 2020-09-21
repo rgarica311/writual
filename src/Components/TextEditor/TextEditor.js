@@ -45,32 +45,24 @@ export default class TextEditor extends Component {
     this.onChange = (editorState) => {
         let raw = convertToRaw(editorState.getCurrentContent())
         this.setState({editorState});
-        //console.log(`details edtiorState Text ${editorState.getCurrentContent().getText()}`)
-        //console.log(`details raw ${JSON.stringify(raw)}`)
-        //const contentState = ContentState.createFromBlockArray(convertFromRaw(raw))
-        //console.log(`details contentState has text ${contentState.hasText()}`)
-
+        
         const currentContentState = this.state.editorState.getCurrentContent()
         const newContentState = editorState.getCurrentContent()
         if(currentContentState !== newContentState) {
 
            if(this.state.updateCharacterDetail !== undefined) {
-              //console.log(`details editorFull ${this.state.editorFull} `)
               this.setState({
                 editorFull: this.state.editorState.getCurrentContent().hasText()
               }, () => {
                   this.saveState(raw) 
               })
-              //this.state.updateCharacterDetail(raw, editorFull)
           }
         }
         
-        //console.log(`details editorState currentContent keys ${this.state.editorState.getCurrentContent().hasText()}`)
-        //console.log(`details editorState currentContent ${ Object.keys(this.state.editorState.getCurrentContent().blockMap).map(key => this.state.getEditorState.getCurrentContent().blockMap[key]) }`)
+       
     };
 
     this.saveState = debounce((raw) => {
-      //console.log(`details saveState ran editorFull: ${editorFull}`)
       this.updateCharacterDetail(raw)
       
     }, 500)
@@ -89,15 +81,12 @@ export default class TextEditor extends Component {
   }
 
   componentDidUpdate = async (prevProps) => {
-    //console.log(`text editor props did update prevProps.currentChar ${prevProps.currentChar} props.currentChar ${this.props.currentChar}`)
     if(this.props.content !== prevProps.content && this.props.content !== undefined) {
-      //console.log(`details updating editorState`)
       this.setState({
         editorState: EditorState.createWithContent(ContentState.createFromText(this.props.content)),
         editorEmpty: false
       })
     
-      //console.log(`editorState: ${JSON.stringify(this.state.editorState)}`)
     } else if (prevProps.currentAttribute !== this.props.currentAttribute) {
         this.setState({
           currentAttribute: this.props.currentAttribute,
@@ -109,7 +98,6 @@ export default class TextEditor extends Component {
           rawEditorData: undefined
         }, () => this.state.getAuthToken !== undefined ? this.getEditorState() : null)
     } else if (prevProps.currentChar !== this.props.currentChar) {
-        //console.log(`this should run: prevProps.currentChar ${prevProps.currentChar} props.currentChar ${this.props.currentChar}`)
 
         this.setState({
           currentChar: this.props.currentChar,
@@ -129,7 +117,6 @@ export default class TextEditor extends Component {
       editorFull: this.state.editorState.getCurrentContent().hasText()
     })
     this.state.socket.on('update-detail', project_id => {
-      //console.log(`TextEditor this.state.project_id ${this.state.project_id} project_id ${project_id}`)
       if(project_id === this.state.project_id) {
         this.getEditorState()
       }
@@ -146,8 +133,6 @@ export default class TextEditor extends Component {
   }
 
   updateCharacterDetail = async (raw) => {
-    //console.log(`details saveState ran and tiggered updateCharacterDetail`)
-    //console.log(`details path: updateCharaterDetails onChange raw: ${JSON.stringify(raw)}`)
      const shared = []
       if(this.state.sharedProjClicked === true ) {
         shared.push(this.state.uid)
@@ -161,13 +146,10 @@ export default class TextEditor extends Component {
       need: this.state.currentAttribute === 'Need' ? raw : null,
       project_id: this.state.project_id
     }
-    //console.log(`details: newDetail in updateCharacterDetail ${JSON.stringify(newDetail)}`)
-    //console.log( `details path eidtorFull true rendering `)
     try {
       fetch(`${url}/details/existing/${this.state.currentAttribute.toLowerCase()}/${this.state.currentChar}/${this.state.project_id}`, {
         method: 'POST',
         headers: {
-          //'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': this.state.idToken
         },
@@ -182,7 +164,6 @@ export default class TextEditor extends Component {
   }
 
   getEditorState = async () => {
-    //console.log(`details getEditorState running`)
     this.setState({
       editorState: EditorState.createEmpty()
     })
@@ -194,29 +175,20 @@ export default class TextEditor extends Component {
           'Authorization': await this.state.getAuthToken()
         },
       })
-      //console.log(`details response: ${JSON.stringify(await response.json())}`)
       if(!response.ok) {
         throw new Error(response.status)
-        //console.log(`detail no repsonse`)
       } else {
-        //console.log(`details response: ${await response.json()}`)
         let rawEditorData = await response.json()
-        //console.log(`rawEditorData: ${JSON.stringify(rawEditorData[this.state.currentAttribute.toLowerCase()])}`)
         this.setState({
-          //editorState: EditorState.createWithContent(convertFromRaw(await response.json()))
           rawEditorData: rawEditorData[this.state.currentAttribute.toLowerCase()]
         }, () => {
-            //console.log(`details this.state.rawEditorData[0][this.state.currentAttribute] ${this.state.rawEditorData[0][this.state.currentAttribute]}`)
             if(this.state.rawEditorData !== undefined && this.state.rawEditorData !== null) {
-              //console.log(`details getEditorState running if ran: this.state.rawEditorData ${JSON.stringify(this.state.rawEditorData)}`)
               const contentState = convertFromRaw(this.state.rawEditorData)
-              //console.log(`contentState ${convertToRaw(contentState)}`)
               this.setState({
                 editorState: EditorState.createWithContent(contentState),
                 editorEmpty: false
               })
             } else {
-              //console.log(`details getEditorState running else ran`)
               this.setState({
                 editorState: EditorState.createEmpty(),
                 editorEmpty: true
@@ -229,13 +201,9 @@ export default class TextEditor extends Component {
     } catch(err) {
       console.error(`error: ${err}`)
     }
-    //return await response.json()
   }
 
   render() {
-    //console.log('content in text editor state', this.props.content)
-    //console.log('this.state.editorstate', this.state.editorState)
-
     const styles = StyleSheet.create({
         characterEditor: {
             borderBottomWidth: 1,
@@ -245,10 +213,7 @@ export default class TextEditor extends Component {
             minWidth: 270,
             backgroundColor: 'white',
             padding: 5, 
-            
-            //justifyContent: 'center',
             borderBottomRightRadius: 8,
-            //marginBottom: 'auto'
 
         },
 
