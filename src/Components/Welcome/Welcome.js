@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
         width: '90%',
         minWidth: 760,
         height: "calc(100% - 80px)",
-        //maxHeight: 815,
         alignSelf: 'center',
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -25,7 +24,6 @@ const styles = StyleSheet.create({
 
     innerContainer: {
         padding: 20,
-        //justifyContent: 'space-evenly',
         height: '100%',
         overflowY: 'auto',
         display: 'block',
@@ -107,7 +105,6 @@ const styles = StyleSheet.create({
 
 
     detail: {
-        //backgroundColor: "rgb(250,121,33)",
         backgroundImage: "linear-gradient(45deg, rgba(250,121,33,1) 0%, rgba(114,98,249,1) 100%)",
         borderRadius: 5,
         borderColor: princetonOrange,
@@ -118,9 +115,6 @@ const styles = StyleSheet.create({
     }, 
 
     howToUse: {
-        //backgroundImage: "linear-gradient(45deg, rgba(250,121,33,1) 0%, rgba(241,0,255,1) 100%)",
-        //backgroundImage: "linear-gradient(45deg, rgba(250,121,33,1) 0%, rgba(216,157,80,1) 100%)",
-        //backgroundImage: " linear-gradient(45deg, rgba(250,121,33,1) 0%, rgba(247,245,233,1) 100%)",
         backgroundImage: "linear-gradient(357deg, rgba(250,121,33,1) 0%, rgba(255,146,126,1) 53%)",
         borderRadius: 5,
         filter: "drop-shadow(0 0 .26rem grey)",
@@ -145,7 +139,6 @@ const styles = StyleSheet.create({
     },
     
     projectList: {
-        //backgroundImage: "linear-gradient(148deg, rgba(41,99,163,1) 0%, rgba(16,49,74,1) 100%)",
         backgroundImage: "linear-gradient(353deg, rgba(16,49,74,1) 0%, rgba(61,90,128,1) 100%);",
         borderRadius: 5,
         filter: "drop-shadow(0 0 .26rem grey)",

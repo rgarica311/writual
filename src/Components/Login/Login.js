@@ -10,6 +10,7 @@ import {
   isMobile
 } from "react-device-detect";
 
+
 const { whiteSmoke } = colorSwaches
 
 export default class Login extends Component {
@@ -49,23 +50,33 @@ export default class Login extends Component {
                     width: 55,
                     height: 55,
                     marginTop: 10,
-                    marginLeft: 10
+                    marginLeft: 10,
+                    alignSelf: "flex-start"
+
                 },
 
-                 
-
                 typewriterAbove: {
-                    width: "40%",
-                    height: "100%",
-                    display: isMobile ? "none" : "block"
-                    //backgroundSize: 'cover' 
+                    height: 654,
+                    //width: "80%",
+                    display: isMobile ? "none" : "block",
+                    
+                },
+
+                laptopContainer: {
+                    width: "100%",
+                    height: 719,
+                    display: isMobile ? "none" : "block",
+                    justifyContent: "center",
+                    backgroundColor: isMobile ? "white" : whiteSmoke,
                     
                 },
 
                 authContainerLogin: {
-                    backgroundColor: isMobile ? "white" : whiteSmoke,
+                    
                     height: isMobile ? hp('100%') : "100%",
                     width: isMobile ? wp('100%') : "100%",
+                    //justifyContent: "center",
+                    alignItems: "center",
                                     
                 },
 
@@ -92,6 +103,15 @@ export default class Login extends Component {
                     justifyContent: 'space-evenly',
                     alignItems: "center",
                     height: "90%",
+                    
+                   
+                },
+
+                contentDemo: {
+                    //position: "absolute",
+                    //top: "70%",
+                    height: "40%",
+                    width: "100%"
                 },
 
                 featureItems: {
@@ -133,10 +153,45 @@ export default class Login extends Component {
                     fontSize: "1.2em"
                 },
 
+                demo: {
+                    width: "100%",
+                    height: 1600,
+                    justifyContent: "space-evenly",
+                    top: "50%",
+                    
+                },
+
+                feature: {
+                    flexDirection: "row",
+                    width: "100%",
+                    height: "20%",
+                },
+
+                vid: {
+                    width: "50%",
+                    height: "100%"
+                },
+
+                text: {
+                    width: "50%",
+                    height: "100%",
+                    justifyContent: "center",
+                    alignItems: "center"
+                },
+
+                featureText: {
+                    fontSize: 32,
+                    fontWeight: "bold",
+                    fontFamily: "Varela Round",
+                    textAlign: "center"
+                },
+
+                gif: {
+                    height: "100%"
+                },
 
 
-
-
+            
 
 
             })
@@ -144,24 +199,84 @@ export default class Login extends Component {
             <WritualContext.Consumer>
             {(context) => (
                 <View style={styles.authContainerLogin}>
-                    <Image style={styles.logo} source={require('../../Assets/logo_t.png')}/>
+                    
+                    
+                    <View style={styles.laptopContainer} >
+                        <Image style={styles.logo} source={require('../../Assets/logo_t.png')}/>
+                        <Image style={styles.typewriterAbove} resizeMode='cover' source={require('../../Assets/laptop.png')}/>
+                    </View>
+                    <View style={styles.contentDemo}>
+                        <View style={styles.mainContent}>
+                            
+                            <View style={styles.loginContainer}>
+                                <Text style={styles.writualIs}>Writual is story development made easy</Text>
+                                <Text style={styles.writualCan}>Create characters, scenes, treatments, collaborate and get feedback all in one place...</Text>
+                            
+                                {
+                                    isMobile
+                                        ? <Text style={styles.writual}>For now, Writual is best experienced on a laptop or desktop. Native iOS and Android apps are on the way!</Text>
+                                        : <GoogleButton onClick={e => context.handleGoogleLogin(this.state.history)}/>
+                                }
+                                
+                            </View>
 
-                    <View style={styles.mainContent}>
-                        
-                        <View style={styles.loginContainer}>
-                            <Text style={styles.writualIs}>Writual is story development made easy</Text>
-                            <Text style={styles.writualCan}>Create characters, scenes, treatments, collaborate and get feedback all in one place...</Text>
-                           
-                            {
-                                isMobile
-                                    ? <Text style={styles.writual}>For now, Writual is best experienced on a laptop or desktop. Native iOS and Android apps are on the way!</Text>
-                                    : <GoogleButton onClick={e => context.handleGoogleLogin(this.state.history)}/>
-                            }
+
+                        </View>
+                        <View style={styles.demo}>
+                            
+                            <View style={styles.feature}>
+                                <View style={styles.vid}>
+                                    <Image style={styles.gif} source={require('../../Assets/projects.gif')}/>
+                                </View>
+                                <View style={styles.text}>
+                                    <Text style={styles.featureText}>Create Feature, Television, and Short projects</Text>
+                                </View>
+                            </View>
+                            <View style={styles.feature}>
+                                <View style={styles.text}>
+                                    <Text style={styles.featureText}>Share projects with collaborators and gain meaningful feedback</Text>
+                                </View>
+
+                                <View style={styles.vid}>
+                                    <Image style={styles.gif} source={require('../../Assets/share.gif')}/>
+                                </View>
+                                
+                            </View>
+                            <View style={styles.feature}>
+                                <View style={styles.vid}>
+                                    <Image style={styles.gif} source={require('../../Assets/scenes.gif')}/>
+                                </View>
+
+                                <View style={styles.text}>
+                                    <Text style={styles.featureText}>Create scenes with the help of well known story development guidelines</Text>
+                                </View>
+                                
+                            </View>
+                            <View style={styles.feature}>
+                                 <View style={styles.text}>
+                                    <Text style={styles.featureText}>Create treatments in a simple rich text editor</Text>
+                                </View>
+                                <View style={styles.vid}>
+                                    <Image style={styles.gif} source={require('../../Assets/treatments.gif')}/>
+                                </View>
+                               
+                            </View>
+                            <View style={styles.feature}>
+                                 <View style={styles.vid}>
+                                    <Image style={styles.gif} source={require('../../Assets/screenplay.gif')}/>
+                                </View>
+                                <View style={styles.text}>
+                                    <Text style={styles.featureText}>Coming soon: Auto formatting screenplay editor</Text>
+                                </View>
+                               
+                            </View>
+
+                            <View style={{marginTop: 100, marginBottom: 100, height: 150, justifyContent: "space-evenly", alignItems:"center"}}>
+                                <GoogleButton onClick={e => context.handleGoogleLogin(this.state.history)}/>
+                                <Text style={{fontFamily:"Varela Round", fontSize: 22}}>Give Writual a Try!</Text>
+                            </View>
                             
                         </View>
-
-                        <Image style={styles.typewriterAbove} resizeMode='cover' source={require('../../Assets/typewriter-above.png')}/>
-
                     </View>
                 </View>  
             )}
