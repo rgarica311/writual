@@ -13,7 +13,7 @@ const { princetonOrange, yankeesBlue } = colorSwatches
 
 const styles = StyleSheet.create({
     container: {
-        minWidth: 340,
+        minWidth: 400,
         width: '30%',
         height: 185,
         boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.1)',

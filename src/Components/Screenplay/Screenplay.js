@@ -21,6 +21,7 @@ import {
   BlockquoteButton,
   CodeBlockButton,
 } from 'draft-js-buttons';
+import Scene from "../Scene/Scene";
 import * as io from 'socket.io-client'
 import { config } from '../../URLS'
 import './Screenplay.css'
@@ -215,31 +216,6 @@ export default class ScreenplayEditor extends Component {
 
   };
 
-  /*this.elementCheck = debounce((text) => {
-        console.log('text', text)
-  
-        let initialSelectionState
-
-        if(text.includes('ext.') || text.incldues('int.')) {
-            console.log('scene heading')
-            initialSelectionState = RichUtils.toggleInlineStyle(this.state.editorState, 'CAPITALIZE')
-            this.setState({
-                editorState: initialSelectionState
-            })
-
-        } else if (!text.includes('EXT')) {
-            console.log('text.includes(EXT)', text.includes('EXT'))
-            console.log('elements.scene_headings.includes(text)', elements.scene_headings.includes(text))
-            console.log(`elements.scene_headings[0] ${elements.scene_headings[0]}`)
-            initialSelectionState = RichUtils.toggleInlineStyle(this.state.editorState, 'CENTER')
-            this.setState({
-                editorState: initialSelectionState
-            })
-        }
-          
-        
-  }, 3000)*/
-
   this.saveScreenplayState = debounce((raw) => {
     this.updateProjectScreenplay(raw)
   }, 500)
@@ -387,7 +363,7 @@ formatAction = (initialSelectionState, currentContentState, stateWithContent) =>
   const inlineStyle = this.state.editorState.getCurrentInlineStyle()
   console.log(`currentInlineStyle: ${inlineStyle}`)
   let styleToRemove
-  const styles = ['CAPITALIZE', 'SHOT']
+  const styles = ['CAPITALIZE', 'SHOT', 'DIALOUGE']
   styles.map(style => {
     if(inlineStyle.has(style)) {
       styleToRemove = style
@@ -568,7 +544,6 @@ componentDidUpdate = async (prevProps) => {
       }
 
 
-  //return await response.json()
   }
 
   render() {
@@ -584,11 +559,14 @@ componentDidUpdate = async (prevProps) => {
             height: 1060,
             backgroundColor: 'white',
             filter: "drop-shadow(0 0 .25rem grey)",
-            alignSelf: 'center',
             padding: 96,
-            paddingLeft: 147
+            paddingLeft: 147,
            
         },
+
+        scenes: {
+          marginRight: 100
+        }
 
     })
 
@@ -619,9 +597,6 @@ componentDidUpdate = async (prevProps) => {
 
         }
 
-        
-
-      
     }
 
     return (
@@ -649,9 +624,27 @@ componentDidUpdate = async (prevProps) => {
                         }
                     </Toolbar>
                             
-                    <View style={{marginTop: 20, padding:20, width: '100%', height: 980, overflow: 'auto'}}>
+                    <View style={{marginTop: 20, padding:20, width: '100%', height: 980, overflow: 'auto', flexDirection: 'row', justifyContent: 'center'}}>
+                        <View style={styles.scenes}>
+                          {
+                            context.projScenes.map(obj => 
+                              <Scene
+                                  getProjectScenes={context.getProjectScenes}
+                                  getAuthToken={context.getAuthToken}
+                                  scene_id={obj.id}
+                                  deleteScenes={context.deleteScenes}
+                                  key={obj.id}
+                                  heading={obj.scene_heading}
+                                  thesis={obj.thesis}
+                                  antithesis={obj.antithesis}
+                                  synthesis={obj.synthesis}
+                              />
+                            )
+                          }
+                        </View>
+                        
                         <View style={styles.screenplayViewContainer}>
-                            <Editor style={{width: '100%', height: 980}} readOnly={  context.sharedProjClicked === true 
+                            <Editor style={{width: '100%'}} readOnly={  context.sharedProjClicked === true 
                                                                                 ? context.sharedProjects.find(proj => proj.title === context.currentProj) !== undefined 
                                                                                     ? context.sharedProjects.find(proj => proj.title === context.currentProj).permission === 'Can Edit' 
                                                                                         ? false 
