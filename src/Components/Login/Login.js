@@ -59,6 +59,7 @@ export default class Login extends Component {
                     height: 654,
                     //width: "80%",
                     display: isMobile ? "none" : "block",
+                    backgroundSize: 'contain',
                     
                 },
 
@@ -187,7 +188,8 @@ export default class Login extends Component {
                 },
 
                 gif: {
-                    height: "100%"
+                    height: "100%",
+                    backgroundSize: "contain"
                 },
 
 
@@ -203,7 +205,7 @@ export default class Login extends Component {
                     
                     <View style={styles.laptopContainer} >
                         <Image style={styles.logo} source={require('../../Assets/logo_t.png')}/>
-                        <Image style={styles.typewriterAbove} resizeMode='cover' source={require('../../Assets/laptop.png')}/>
+                        <Image style={styles.typewriterAbove} resizeMode='contain' source={require('../../Assets/laptop.png')}/>
                     </View>
                     <View style={styles.contentDemo}>
                         <View style={styles.mainContent}>
@@ -226,7 +228,7 @@ export default class Login extends Component {
                             
                             <View style={styles.feature}>
                                 <View style={styles.vid}>
-                                    <Image style={styles.gif} source={require('../../Assets/projects.gif')}/>
+                                    <Image style={styles.gif} resizeMode='contain' source={require('../../Assets/projects.gif')}/>
                                 </View>
                                 <View style={styles.text}>
                                     <Text style={styles.featureText}>Create Feature, Television, and Short projects</Text>
@@ -238,13 +240,13 @@ export default class Login extends Component {
                                 </View>
 
                                 <View style={styles.vid}>
-                                    <Image style={styles.gif} source={require('../../Assets/share.gif')}/>
+                                    <Image style={styles.gif} resizeMode='contain' source={require('../../Assets/share.gif')}/>
                                 </View>
                                 
                             </View>
                             <View style={styles.feature}>
                                 <View style={styles.vid}>
-                                    <Image style={styles.gif} source={require('../../Assets/scenes.gif')}/>
+                                    <Image style={styles.gif} resizeMode='contain' source={require('../../Assets/scenes.gif')}/>
                                 </View>
 
                                 <View style={styles.text}>
@@ -257,13 +259,13 @@ export default class Login extends Component {
                                     <Text style={styles.featureText}>Create treatments in a simple rich text editor</Text>
                                 </View>
                                 <View style={styles.vid}>
-                                    <Image style={styles.gif} source={require('../../Assets/treatments.gif')}/>
+                                    <Image style={styles.gif} resizeMode='contain' source={require('../../Assets/treatments.gif')}/>
                                 </View>
                                
                             </View>
                             <View style={styles.feature}>
                                  <View style={styles.vid}>
-                                    <Image style={styles.gif} source={require('../../Assets/screenplay.gif')}/>
+                                    <Image style={styles.gif} resizeMode='contain' source={require('../../Assets/screenplay.gif')}/>
                                 </View>
                                 <View style={styles.text}>
                                     <Text style={styles.featureText}>Coming soon: Auto formatting screenplay editor</Text>
