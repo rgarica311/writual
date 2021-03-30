@@ -1,5 +1,5 @@
 const prod = {
-    API_URL: 'https://calm-temple-47594.herokuapp.com'
+    API_URL: 'https://cors-anywhere.herokuapp.com/https://calm-temple-47594.herokuapp.com'
 }
 
 const dev = {
