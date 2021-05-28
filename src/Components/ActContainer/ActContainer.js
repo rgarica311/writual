@@ -249,6 +249,7 @@ export default class ActContainer extends Component {
                                                             thesis={obj.thesis}
                                                             antithesis={obj.antithesis}
                                                             synthesis={obj.synthesis}
+                                                            scene_num={obj.scene_num}
                                                         />
                                                         : null
                                                     : null

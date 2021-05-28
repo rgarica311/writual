@@ -142,14 +142,17 @@ export default function Scene(props) {
         <View style={styles.container}>
             {
                 props.newScene !== undefined
-                    ? <FontAwesomeIcon onClick={e => props.closeAddScene()} style={{right: -10, top: -10, position:'absolute'}} icon={faTimesCircle} className='fa-lg iconHover' color='#15273D'/>
+                    ? <FontAwesomeIcon  onClick={e => props.closeAddScene()} 
+                                        style={{right: -10, top: -10, position:'absolute'}} 
+                                        icon={faTimesCircle} 
+                                        className='fa-lg iconHover' 
+                                        color='#15273D'/>
 
                     : props.deleteScenes === true
                         ? <FontAwesomeIcon onClick={e => deleteScene(props.scene_id)} style={{right: 5, top: 0, position:'absolute'}} icon={faMinus} className='fa-lg iconHover' color='#15273D'/>
-                        : null
+                        : <Text style={{right: 5, top: 0, position:'absolute'}}>Scene: {props.scene_num}</Text>
             }
-            
-           
+
             {
                 props.newScene !== undefined 
                     ? <TextInput placeholder='Scene Heading' style={{ alignSelf: 'center', width: '100%', backgroundColor:'lightgrey', padding: 5, borderRadius: 2}} value={sceneHeading} onChange={e => handleSetSceneHeading(e.target.value)} />

@@ -44,6 +44,7 @@ export default class ChatWindow extends Component {
             getUnread: this.props.getUnread
         }
     }
+    
 
     pan = new Animated.ValueXY()
         
@@ -163,11 +164,6 @@ export default class ChatWindow extends Component {
         //console.log('handleScroll debug scroll scroll position Y', posY)
     }
 
-
-    
-
-
-
     handleMessageSubmit = async (e) => {
        setTimeout(() => {
             this.textInput.current.focus()
@@ -194,8 +190,6 @@ export default class ChatWindow extends Component {
             message: text
         })
     }
-
-    
 
     render(){
         //console.log('chat window render ran')

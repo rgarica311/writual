@@ -112,6 +112,20 @@ export default class ScreenplayEditor extends Component {
               focusOffset: lastBlock.getLength()
             })
 
+            const CharacterSelectionState = new SelectionState({
+              anchorKey: lastBlock.getKey(),
+              anchorOffset: 15,
+              focusKey: lastBlock.getKey(),
+              focusOffset: 15
+            })
+
+            const DialogueSelectionState = new SelectionState({
+              anchorKey: lastBlock.getKey(),
+              anchorOffset: 25,
+              focusKey: lastBlock.getKey(),
+              focusOffset: 25
+            })
+
             const newSelectionState = new SelectionState({
               anchorKey: firstBlock.getKey(),
               anchorOffset: nextOffSet,
@@ -151,8 +165,8 @@ export default class ScreenplayEditor extends Component {
                 if(allUpper) {
                   if(!shots.includes(text) && !transitions.includes(text)) {
 
-                    console.log(`element is: character`)
-                    this.formatCharacterName(initialSelectionState, currentContentState, stateWithContent, isDialogue)
+                    
+                    this.formatCharacterName(initialSelectionState, CharacterSelectionState, currentContentState, stateWithContent, isDialogue)
                     
                   }  else {
                       console.log('element is: shot')
@@ -175,6 +189,9 @@ export default class ScreenplayEditor extends Component {
                            
                     if (isCharacter) {
                         console.log(`element is: dialogue`)
+
+                      
+
                         this.formatDialogue(initialSelectionState, currentContentState, stateWithContent)
                     } else {
                         this.formatAction(initialSelectionState, currentContentState, stateWithContent, '')
@@ -248,8 +265,8 @@ formatSceneHeading = (initialSelectionState, currentContentState, stateWithConte
   }
 }
 
-formatCharacterName = (initialSelectionState, currentContentState, stateWithContent, isDialogue) => {
-  
+formatCharacterName = (initialSelectionState, CharacterSelectionState, currentContentState, stateWithContent, isDialogue) => {
+  console.log(`format character name CharacterSelectionState: ${CharacterSelectionState}`)
   let newContentState
   //check if previous element is dialogue
   if(isDialogue) {
@@ -259,6 +276,7 @@ formatCharacterName = (initialSelectionState, currentContentState, stateWithCont
   } else {
       newContentState = Modifier.applyInlineStyle(currentContentState, initialSelectionState, 'CHARACTER')
   }
+  console.log(`newContentState: ${newContentState}`)
   
   const newEditorStateWithSelection = EditorState.push(stateWithContent, newContentState, 'change-inline-stlye')
   const finalState = EditorState.moveSelectionToEnd(newEditorStateWithSelection)
@@ -270,10 +288,11 @@ formatCharacterName = (initialSelectionState, currentContentState, stateWithCont
 }
 
 formatDialogue = (initialSelectionState, currentContentState, stateWithContent) => {
-
+  console.log(`formate dialog`)
   const newContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, 'CHARACTER')
+  console.log(`dialog newContenState: ${newContentState}`)
   const DialogueContentState = Modifier.applyInlineStyle(newContentState, initialSelectionState, 'DIALOGUE')
-
+  console.log(`dialougeContentState: ${DialogueContentState}`)
   const DialogueEditorState = EditorState.push(stateWithContent, DialogueContentState, 'change-inline-stlye')
   const finalState = EditorState.moveSelectionToEnd(DialogueEditorState)
 
@@ -371,6 +390,7 @@ formatAction = (initialSelectionState, currentContentState, stateWithContent) =>
   })
   
   const newContentState = Modifier.removeInlineStyle(currentContentState, initialSelectionState, styleToRemove)
+  console.log(`formatAction newContentState: ${newContentState}`)
   const newContentWithRemovalSelection = EditorState.push(stateWithContent, newContentState, 'change-inline-stlye')
   const finalState = EditorState.moveSelectionToEnd(newContentWithRemovalSelection)
 
@@ -561,6 +581,7 @@ componentDidUpdate = async (prevProps) => {
             filter: "drop-shadow(0 0 .25rem grey)",
             padding: 96,
             paddingLeft: 147,
+            marginBottom: 50
            
         },
 
@@ -573,8 +594,9 @@ componentDidUpdate = async (prevProps) => {
     const styleMap = {
         
         DIALOGUE: {
-            margin: "0 auto",
-            maxWidth: 330
+            marginLeft: 96,
+            maxWidth: 330,
+            minWidth: 330
         },
 
         CAPITALIZE: {
@@ -583,7 +605,7 @@ componentDidUpdate = async (prevProps) => {
 
         CHARACTER: {
           textTransform: 'uppercase',
-          marginLeft: 190,
+          marginLeft: 193
         },
 
         SHOT: {
@@ -643,25 +665,28 @@ componentDidUpdate = async (prevProps) => {
                           }
                         </View>
                         
-                        <View style={styles.screenplayViewContainer}>
-                            <Editor style={{width: '100%'}} readOnly={  context.sharedProjClicked === true 
-                                                                                ? context.sharedProjects.find(proj => proj.title === context.currentProj) !== undefined 
-                                                                                    ? context.sharedProjects.find(proj => proj.title === context.currentProj).permission === 'Can Edit' 
-                                                                                        ? false 
-                                                                                        : true 
-                                                                                    : context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj) !== undefined
-                                                                                        ? context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj).permission === 'Can Edit' 
-                                                                                            ? false
-                                                                                            : true
-                                                                                        : null
-                                                                                : false  } 
-                                                                                plugins={plugins} 
-                                                                                ref={this.setEditor} 
-                                                                                editorState={this.state.editorState} 
-                                                                                onChange={this.onChange}
-                                                                                handleKeyCommand={this.handleKeyCommand}
-                                                                                keyBindingFn={this.myKeyBindingFn}
-                                                                                customStyleMap={styleMap} />
+                        <View style={{flexDirection: "column"}}>
+                          <View style={styles.screenplayViewContainer}>
+                              <Editor style={{width: '100%'}} readOnly={  context.sharedProjClicked === true 
+                                                                                  ? context.sharedProjects.find(proj => proj.title === context.currentProj) !== undefined 
+                                                                                      ? context.sharedProjects.find(proj => proj.title === context.currentProj).permission === 'Can Edit' 
+                                                                                          ? false 
+                                                                                          : true 
+                                                                                      : context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj) !== undefined
+                                                                                          ? context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj).permission === 'Can Edit' 
+                                                                                              ? false
+                                                                                              : true
+                                                                                          : null
+                                                                                  : false  } 
+                                                                                  plugins={plugins} 
+                                                                                  ref={this.setEditor} 
+                                                                                  editorState={this.state.editorState} 
+                                                                                  onChange={this.onChange}
+                                                                                  handleKeyCommand={this.handleKeyCommand}
+                                                                                  keyBindingFn={this.myKeyBindingFn}
+                                                                                  customStyleMap={styleMap} />
+                          </View>
+                          <View style={styles.screenplayViewContainer}/>
                         </View>
                     </View>
                     

@@ -37,7 +37,7 @@ export default class DetailTab extends Component {
                 width: '15%',
                 minWidth: 120,
                 padding: 5,
-                height: 80,
+                height: 70,
               
             },
 

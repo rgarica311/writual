@@ -15,13 +15,14 @@ import './App.css';
 import withFirebaseAuth from 'react-with-firebase-auth'
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
-import firebaseSetup from './firebaseSetup'
+import firebaseSetup from './firebaseSetup's
 import debounce from 'lodash/debounce'
 import ErrorBoundary from './ErrorBoundary'
 import * as io from 'socket.io-client'
 import { config } from './URLS'
 
 const url = config.API_URL
+console.log('url: ', url)
 
 const firebaseApp = firebaseSetup.firebaseApp
 
@@ -153,6 +154,7 @@ closeChatWindow = (e, uni_id, project_id) => {
 }
 
 getSharedProjects = async () => {
+  console.log('url:', url)
   return new Promise(async (resolve, reject) => {
     if(this.state.getSharedProjectsRan === undefined) {
         this.setState({
@@ -187,8 +189,9 @@ getSharedProjects = async () => {
 }
 
 getEpisodes = async () => {
-  //console.log('debug connections: getEpisodes running')
-  return new Promise(async (resolve, reject) => {
+  console.log('debug connections: getEpisodes running')
+  console.log('url:', url)
+  /*return new Promise(async (resolve, reject) => {
     if(this.state.getEpisodes === undefined) {
         this.setState({
           getEpisodesRan: true
@@ -218,7 +221,7 @@ getEpisodes = async () => {
           console.error('error:', error)
       }
 
-  })
+  })*/
 }
 
 getSharedEpisodes = async () => {
