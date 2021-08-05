@@ -14,6 +14,7 @@ import ShareComponent from '../ShareComponent/ShareComponent'
 import TreatmentEditor from '../TreatmentEditor/TreatmentEditor'
 import Welcome from '../Welcome/Welcome'
 import FeedbackForm from '../FeedbackForm/FeedbackForm'
+import Chat from '../Chat/Chat'
 
 import colorSwatches from '../../colorSwatches'
 
@@ -73,6 +74,15 @@ export default class DetailView extends Component {
         paddingBottom: 20
       },
 
+      overviewHeader: {
+        fontSize: 40,
+        fontWeight: 'bold',
+        fontFamily: 'Roboto Slab',
+        color: "#15273D",
+        marginBottom: 15,
+        marginTop: 15,
+      },
+
       sceneContainer: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -85,14 +95,6 @@ export default class DetailView extends Component {
         height: hp("5%"),
         color: "#15273D",
         fontSize: 20
-      },
-
-      overviewHeader: {
-        fontSize: 20,
-        fontFamily: 'Roboto Slab',
-        color: "#15273D",
-        marginBottom: 15,
-        marginTop: 15,
       },
 
       scrollOverview: {
@@ -151,13 +153,8 @@ export default class DetailView extends Component {
             
             
             {context.currentTab === "Overview"
-              ? <View style={{height: this.state.windowHeight - 80, width: this.state.windowWidth - 310, paddingLeft: 50}}>
-                  <View style={{ minWidth: 180, flexDirection: "row", alignSelf: "flex-start" }}>
-                    <Text style={styles.overviewHeader}>
-                      {context.currentProj} -{" "}
-                    </Text>
-                    <Text style={styles.overviewHeader}>Overview</Text>
-                  </View>
+              ? <View style={{height: this.state.windowHeight - 70, width: this.state.windowWidth - 310}}>
+                  
                   <Overview windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight} />
                 </View>
               : context.currentTab === "Characters"
@@ -222,8 +219,8 @@ export default class DetailView extends Component {
                                                                     ? context.projects.find(proj => proj.title === context.currentProj).id
                                                                     : context.episodes.find(proj => proj.episode_title === context.currentProj).project_id
                                                             : null}
-                                              episode_id={context.currentProj !== undefined
-                                                            ? context.sharedProjClicked
+                                              episode_id={context.currentProj !== undefined && context.currentProjFormat === 'episode'
+                                                            ? context.sharedProjClicked 
                                                                 ? context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj) !== undefined 
                                                                     ? context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj).id 
                                                                     : null
@@ -241,10 +238,12 @@ export default class DetailView extends Component {
                           </View>
 
                         </View>
-
-                      : context.currentTab === "Submit Feedback" 
-                        ? <FeedbackForm getAuthToken={context.getAuthToken} />
-                        : <Welcome/>
+                      
+                      : context.currentTab === "Chat"
+                          ? <Chat/>
+                          : context.currentTab === "Submit Feedback" 
+                              ? <FeedbackForm getAuthToken={context.getAuthToken} />
+                              : <Welcome/>
             }
             {
                 context.renderShareComponent === true

@@ -9,8 +9,8 @@ export default class ProjectDetails extends Component {
     constructor(props){
         super(props)
         this.state = {
-            tabTitles: ['Overview', 'Characters', 'Scenes', 'Treatment', 'Submit Feedback'],
-            tvTabTitles: ['Overview', 'Characters'],
+            tabTitles: ['Overview', 'Characters', 'Scenes', 'Treatment', 'Chat', 'Submit Feedback'],
+            tvTabTitles: ['Overview', 'Characters', 'Chat'],
             episodeTabTitles: ['Overview', 'Scenes', 'Treatment'],
             renderProfileMenu: false, 
             windowHeight: this.props.windowHeight,
@@ -32,7 +32,11 @@ export default class ProjectDetails extends Component {
         const styles = StyleSheet.create({
             tabContainer: {
                 flexDirection: 'row',
-                width: this.state.windowWidth - 310,
+                //width: this.state.windowWidth - 310,
+                width: '100%',
+                height: 70,
+                borderBottomWidth: 1, 
+                borderBottomColor: 'lightgrey',
                 //minWidth: 500
             },
 

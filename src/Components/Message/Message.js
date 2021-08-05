@@ -3,6 +3,9 @@ import { View, Text } from 'react-native'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import ChatIcon from '../ChatIcon/ChatIcon'
 import { config } from '../../URLS'
+import colorSwatches from '../../colorSwatches'
+
+const { princetonOrange } = colorSwatches
 
 const url = config.API_URL
 
@@ -69,18 +72,17 @@ export default class Message extends Component {
     render(){
         //console.log(`debug chat scroll message component: this.state.message: ${this.state.message}`)
         return (
-            <View key={this.state.key} style={{flexDirection: 'row', width: 'max-content', alignSelf: this.state.sender_uid === this.state.uid ? 'flex-end' : 'flex-start'}}>
+            <View key={this.state.key} style={{maxWidth: '75%', alignSelf: this.state.sender_uid === this.state.uid ? 'flex-end' : 'flex-start'}}>
                 {
                     this.state.sender_uid !== this.state.uid
                         ? <ChatIcon photoUrl={this.state.photoUrl}/>
                         : null
                 }
                 <Text style={{  marginBottom: 5, 
-                                width:'max-content', 
                                 borderRadius: 10, 
                                 padding: 7, 
                                 color: 'white', 
-                                backgroundColor:'rgba(240, 240, 238, 0.45)', 
+                                backgroundColor: this.state.sender_uid === this.state.uid ? princetonOrange : 'rgba(240, 240, 238, 0.45)'
                                 
                             }}>{this.state.message}</Text>
             </View>

@@ -13,8 +13,7 @@ const styles =  StyleSheet.create({
     height: 70,
     alignItems: 'center',
     flexDirection: 'row',
-    borderBottomColor: '#293E4F',
-    borderBottomWidth: 1,
+   
     cursor: "pointer"
   },
 

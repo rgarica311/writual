@@ -153,10 +153,15 @@ export default function Scene(props) {
             {
                 props.newScene !== undefined 
                     ? <TextInput placeholder='Scene Heading' style={{ alignSelf: 'center', width: '100%', backgroundColor:'lightgrey', padding: 5, borderRadius: 2}} value={sceneHeading} onChange={e => handleSetSceneHeading(e.target.value)} />
-                    : <Text style={styles.text}><Text style={styles.bold}>Scene Heading: </Text>{props.heading}</Text>
+                    : <Text style={styles.text}>
+                        <Text style={styles.bold}>
+                            Scene Heading: 
+                        </Text>
+                        {props.heading}
+                    </Text>
             }
             {
-                props.newScene !== undefined 
+                props.newScene !== undefined  
                     ? <TextInput placeholder='Thesis: The goal of the main character in the scene' style={{alignSelf: 'center', width: '100%', backgroundColor:'lightgrey', padding: 5, borderRadius: 2}} value={thesis} onChange={e => handleSetThesis(e.target.value)} />
                     : <Text style={styles.text}><Text style={styles.bold}>Thesis: </Text> {props.thesis}</Text>
             }

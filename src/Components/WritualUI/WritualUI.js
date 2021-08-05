@@ -37,33 +37,15 @@ export default class WritualUI extends Component {
                 <WritualContext.Consumer>
                     {(context) => (
                         
-                        <View style={styles.uiContainer}>
+                        <View>
                             <WindowSize render={({width, height}) => (
                                  <View style={styles.uiContainer}>
-                                    {
-                                        context.openChats !== undefined 
-                                            ? context.openChats.length > 0
-                                                ? context.openChats.map(chat => <ChatWindow clientUid={context.uid} 
-                                                                                            windowWidth={context.windowWidth} 
-                                                                                            windowHeight={context.windowHeight} 
-                                                                                            getUnread={context.getUnread} 
-                                                                                            createUnreadArgs={context.createUnreadArgs} 
-                                                                                            key={chat.title} 
-                                                                                            shared={chat.shared} 
-                                                                                            email={chat.email} 
-                                                                                            title={chat.title} 
-                                                                                            project_id={chat.project_id} 
-                                                                                            uni_id={chat.uni_id} 
-                                                                                            getAuthToken={context.getAuthToken} 
-                                                                                            recipient_uid={chat.recipient_uid}/>)
-                                                : null
-                                            : null
-                                    
-                                    }
                                     {  
                                        <View style={styles.uiContainer}>
-                                            <ProjectList windowWidth={width} windowHeight={height}/>
+                                             
+                                            <ProjectList renderChat={ context.currentTab === 'Chat' ? true : false} windowWidth={width} windowHeight={height}/>
                                             <DetailView windowWidth={width} windowHeight={height} history={this.state.history}/>
+                                    
                                         </View>
                                     }
                                     {

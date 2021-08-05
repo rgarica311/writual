@@ -254,7 +254,7 @@ componentDidMount = () => {
     
     const styles = StyleSheet.create({
         feedbackEditor: {
-          width: '100%',
+          width: '45%',
           height: '100%',
           alignSelf: 'flex-start',
         },

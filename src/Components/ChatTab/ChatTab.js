@@ -263,7 +263,7 @@ export default class ProjectTab extends Component {
 
                     Platform.OS  === 'web'
                         ? this.state.episode === false
-                            ?   <View pointerEvents='auto' onClick={e => context.onProjectClick(e, this.state.proj, this.state.projformat, this.state.framework, this.state.sharedProj, this.state.shared, this.state.episode_id, this.state.project_id, this.state.episode, this.state.show_title)} style={this.state.projformat === "Television" ? styles.tvItem : styles.item}>
+                            ?  <View pointerEvents='auto' onClick={e => context.onProjectClick(e, this.state.proj, this.state.projformat, this.state.framework, this.state.sharedProj, this.state.shared, this.state.episode_id, this.state.project_id, this.state.episode, this.state.show_title)} style={this.state.projformat === "Television" ? styles.tvItem : styles.item}>
                                         <View style={{ marginLeft: 15, justifyContent: 'center'}}>
                                             <Text style={context.currentProj === this.state.proj ? styles.activeText : styles.text}>{this.state.proj}</Text>
                                             <View style={styles.flexRow}> 
@@ -284,7 +284,48 @@ export default class ProjectTab extends Component {
                                             </View>
                                         </View>
                                         <View style={this.state.projformat === 'Television' ? styles.tvIconContainer : styles.iconContainer}>
-                                            
+                                            {   //put some logic in here to use episode_id if availbble for photourl obj search
+                                                this.state.shared === true && context.photoUrls.length > 0 && this.state.sharedProj === false && this.state.projformat !== 'Television'
+                                                    ? context.photoUrls.find(obj => obj.project_id === this.state.project_id) !== undefined 
+                                                        ?   context.photoUrls.find(obj => obj.project_id === this.state.project_id).photoUrls.map(url => <ChatIcon email={url.email} 
+                                                                                                    unReadNum={ this.state.proj !== undefined 
+                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined
+                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true
+                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).numUnreadMsgs
+                                                                                                                            : null
+                                                                                                                        : null
+                                                                                                                    : this.state.episode_title !== undefined 
+                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined 
+                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true
+                                                                                                                                ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).numUnreadMsgs
+                                                                                                                                : null
+                                                                                                                            : null
+                                                                                                                        : null} 
+                                                                                                    unReadMessages={this.state.unreadMsgs} 
+                                                                                                    recipient_uid={url.uid} 
+                                                                                                    openUserChat={context.openUserChat} 
+                                                                                                    key={url.id} 
+                                                                                                    photoUrl={url.photo_url}
+                                                                                                    proj={this.state.proj !== undefined ? this.state.proj : this.state.episode_title} 
+                                                                                                    sender_uid={this.state.proj !== undefined && context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined 
+                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true
+                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).sender_uid
+                                                                                                                        : this.state.episode_title !== undefined && context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined 
+                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true
+                                                                                                                                ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).sender_uid
+                                                                                                                                : null
+                                                                                                                            : null
+                                                                                                                    : null} 
+                                                                                                                        
+                                                                                                    sharedProj={this.state.sharedProj}
+                                                                                                    uni_id={this.state.episode_id}
+                                                                                                    project_id={this.state.project_id}
+                                                        
+                                                                                                    />)
+                                                        : null
+                                                    : null
+                                                
+                                            }
                                             { // Icons for users own projects
                                                 this.state.sharedProj === false
 
@@ -436,7 +477,56 @@ export default class ProjectTab extends Component {
                                                                 
                                                             </View>
                                                         :   <View style={styles.iconContainer}> 
-                                                                
+                                                                {
+                                                                    this.state.sharedProj === true && context.photoUrls.length > 0 && this.state.projformat !== 'Television'
+                                                                        ? context.photoUrls.find(obj => obj.project_id === this.state.project_id || obj.project_id === this.state.episode_id) !== undefined //episode fix this here for epsioes shared also fix new projects having shared set on creation
+                                                                            ? context.photoUrls.find(obj => obj.project_id === this.state.project_id || obj.project_id === this.state.episode_id).photoUrls.map(url => <ChatIcon email={url.email} 
+                                                                                                                    unReadNum={ this.state.proj !== undefined 
+                                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined 
+                                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true
+                                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).numUnreadMsgs
+                                                                                                                                            : null
+                                                                                                                                        : null
+                                                                                                                                    : this.state.episode_title !== undefined 
+                                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined
+                                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true
+                                                                                                                                                ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).numUnreadMsgs
+                                                                                                                                                : null
+                                                                                                                                            : null
+                                                                                                                                        : null
+                                                                                                                                }  
+                                                                                                                    sender_uid={ this.state.proj !== undefined
+                                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined 
+                                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true
+                                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).sender_uid
+                                                                                                                                            : null
+                                                                                                                                        : null
+                                                                                                                                    : this.state.episode_title !== undefined 
+                                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined 
+                                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true
+                                                                                                                                                ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).sender_uid
+                                                                                                                                                : null
+                                                                                                                                            : null
+                                                                                                                                        : null
+
+                                                                                                                                }
+                                                                                                                    unReadMessages={this.state.unreadMsgs} 
+                                                                                                                    recipient_uid={url.uid} 
+                                                                                                                    openUserChat={context.openUserChat} 
+                                                                                                                    key={url.id} 
+                                                                                                                    photoUrl={url.photo_url} 
+                                                                                                                    proj={this.state.proj !== undefined ? this.state.proj : this.state.episode_title} 
+                                                                                                                    /*sender_uid={this.state.proj !== undefined && context.unreadMessagesStatus.length > 0
+                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).sender_uid
+                                                                                                                    : this.state.episode_title !== undefined && context.unreadMessagesStatus.length > 0
+                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).sender_uid
+                                                                                                                        : 'test'} */
+                                                                                                                    sharedProj={this.state.sharedProj} 
+                                                                                                                    uni_id={this.state.episode_id}
+                                                                                                                    project_id={this.state.project_id}/>)
+                                                                            : null
+                                                                        : null
+                                                                }
                                                                 <FontAwesomeIcon style={{alignSelf: 'center'}} icon={faEyeSlash} className='fa-sm iconHover' 
                                                                             onClick={this.state.visible === true 
                                                                                             ? this.state.projformat === 'Episode' ? e => context.hideEpisode(e, this.state.proj, this.state.sharedProj)  : e => context.hideProj(e, this.state.proj, this.state.sharedProj)
@@ -477,7 +567,52 @@ export default class ProjectTab extends Component {
                                                             
                                         </View>
                                         <View style={styles.iconContainer}>
-                                            
+                                            {
+                                                context.photoUrls.length > 0 && this.state.shared === true //make sure project get set shared when shared
+                                                    ? context.photoUrls.find(obj => obj.project_id === this.state.episode_id) !== undefined 
+                                                        ? context.photoUrls.find(obj => obj.project_id === this.state.episode_id).photoUrls.map(url => <ChatIcon email={url.email} 
+                                                                                                unReadNum={ this.state.proj !== undefined && this.state.episode_title === undefined 
+                                                                                                                                ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined 
+                                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true && context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined
+                                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).numUnreadMsgs
+                                                                                                                                        : null
+                                                                                                                                    : null
+                                                                                                                                : this.state.episode_title !== undefined 
+                                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title) !== undefined 
+                                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).unreadMsgs === true && context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title) !== undefined
+                                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).numUnreadMsgs
+                                                                                                                                            : null
+                                                                                                                                        : null
+                                                                                                                                    : null
+                                                                                                           }   
+                                                                                                sender_uid={ this.state.proj !== undefined && this.state.episode_title === undefined 
+                                                                                                                ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined 
+                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).unreadMsgs === true && context.unreadMessagesStatus.find(msg => msg.title === this.state.proj) !== undefined
+                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.proj).sender_uid
+                                                                                                                        : null
+                                                                                                                    : null
+                                                                                                                : this.state.episode_title !== undefined 
+                                                                                                                    ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title) !== undefined 
+                                                                                                                        ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).unreadMsgs === true && context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title) !== undefined
+                                                                                                                            ? context.unreadMessagesStatus.find(msg => msg.title === this.state.episode_title).sender_uid
+                                                                                                                            : null
+                                                                                                                        : null
+                                                                                                                    : null
+
+                                                                                                            }  
+                                                                                                unReadMessages={this.state.unreadMsgs} 
+                                                                                                recipient_uid={url.uid} 
+                                                                                                openUserChat={context.openUserChat} 
+                                                                                                key={url.id} 
+                                                                                                photoUrl={url.photo_url} 
+                                                                                                proj={this.state.episode_title} 
+                                                                                                
+                                                                                                sharedProj={this.state.sharedProj} 
+                                                                                                uni_id={this.state.episode_id}
+                                                                                                project_id={this.state.project_id}/>)
+                                                        : null
+                                                    : null
+                                            }
                                            <FontAwesomeIcon className='fa-sm iconHover' style={{marginLeft: this.state.shared === true ? 0 : 'auto'}} icon={ faEyeSlash } color={
                                                                                         context.episodes !== undefined
                                                                                             ? context.episodes.find(proj => proj.visible === false) 

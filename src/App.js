@@ -22,6 +22,7 @@ import * as io from 'socket.io-client'
 import { config } from './URLS'
 
 const url = config.API_URL
+console.log('api url', url)
 
 const firebaseApp = firebaseSetup.firebaseApp
 
@@ -123,7 +124,7 @@ class App extends Component {
       showHiddenModeEp: false,
       showHiddenModeSharedEp: false,
       openChats: [],
-      socket: io.connect('http://192.168.0.13:8000'),
+      socket: io.connect(url),
       unreadMessagesStatus: [],
       unreadArgs: [],
       unreadMessages: undefined,
@@ -158,191 +159,216 @@ getSharedProjects = async () => {
           getSharedProjectsRan: true
         })
       }
-      try {
-        let response = await fetch(`${url}/shared/projects` ,    {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json',
-            'Authorization': this.state.idToken
-          },
-        })
-        if(!response.ok){
-          throw new Error(response.status)
-        } else {
-          this.setState({
-            sharedProjects: await response.json()
-          }, () => {
-            //this.createUnreadArgs(true)
-            resolve(true)
+
+      this.getAuthToken().then( async (idToken) => {
+
+        try {
+          let response = await fetch(`${url}/shared/projects` ,    {
+            method: 'GET',
+            headers: {
+              'content-type': 'application/json',
+              'Authorization': idToken
+            },
           })
+          if(!response.ok){
+            throw new Error(response.status)
+          } else {
+            this.setState({
+              sharedProjects: await response.json()
+            }, () => {
+              //this.createUnreadArgs(true)
+              resolve(true)
+            })
+          }
+
+        } catch (error) {
+          reject(new Error(error))
+          //console.error('error:', error)
         }
 
-      } catch (error) {
-        reject(new Error(error))
-        //console.error('error:', error)
-      }
+      })
+      
   })
   
 }
 
-getEpisodes = async () => {
-  //console.log('debug connections: getEpisodes running')
-  return new Promise(async (resolve, reject) => {
-    if(this.state.getEpisodes === undefined) {
-        this.setState({
-          getEpisodesRan: true
-        })
-      }
-      try {
-        let response = await fetch(`${url}/episodes`,   {
-            method: 'GET',
-            headers: {
-              'content-type': 'application/json',
-              'Authorization': this.state.idToken
-            },
-        })
-        if(!response.ok){
-          throw new Error(response.status)
-        } else {
-            this.setState({
-              episodes: await response.json()
-            }, () => {
-              resolve(false)
-            })
-        }
-          
-
-      } catch (error) {
-          reject(new Error(error))
-          console.error('error:', error)
-      }
-
-  })
-}
-
-getSharedEpisodes = async () => {
-  //console.log('debug connections: getSharedEpisodes running')
-  return new Promise(async (resolve, reject) => {
-    if(this.state.getSharedEpisodesRan === undefined) {
-    this.setState({
-      getSharedEpisodesRan: true
-    })
-  }
-  try {
-    let response = await fetch(`${url}/shared/episodes`, {
-        method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-          'Authorization': this.state.idToken
-        },
-    })
-    if(!response.ok){
-      throw new Error(response.status)
-    } else {
-        this.setState({
-          sharedEpisodes: await response.json()
-        }, () => {
-          resolve(true)
-        })
-    }
-      
-
-  } catch (error) {
-      reject(new Error(error))
-      console.error('error:', error)
-  }
-  })
-     
-}
-
-getAuthToken = async () => {
-  //console.log('details debug flow: get auth token running')
-  const idToken = await firebaseAppAuth.currentUser.getIdToken(/* forceRefresh */ true)
-  //console.log(`idToken in getAuthToken ${idToken}`)
-  this.setState({
-    idToken: idToken
-  })
-  return idToken
-
-}
-
-
 getProjects =  async () => {
-  //console.log('debug connections: get projects running idToken', this.state.idToken)
+  console.log('getting projects')
   return new Promise(async (resolve, reject) => {
     if(this.state.getProjectsRan === undefined) {
       this.setState({
         getProjectsRan: true
       })
     }
+    this.getAuthToken().then( async (idToken) => {
+
+      //console.log('auth: ', auth.auth)
+      try {
+        let response = await fetch(`${url}/projects`, {
+            method: 'GET',
+            headers: {
+              'content-type': 'application/json',
+              'Authorization': idToken
+            }
+        });
+
+        if(!response.ok) {
+          throw new Error(response.status)
+        }
+        else {
+          this.setState({
+            projects: await response.json()
+          }, () => {
+            resolve(false)
+          })
+        }
+        
+      } catch (error) {
+        reject(new Error(error))
+        console.log('error getting projects', error)
+      }
+
+    })
+  })
+}
+
+getEpisodes = async () => {
+  //console.log('debug connections: getEpisodes running idToken', this.state.idToken)
+  return new Promise(async (resolve, reject) => {
+    if(this.state.getEpisodes === undefined) {
+        this.setState({
+          getEpisodesRan: true
+        })
+      }
+      this.getAuthToken().then( async (idToken) => {
+        try {
+          let response = await fetch(`${url}/episodes`,   {
+              method: 'GET',
+              headers: {
+                'content-type': 'application/json',
+                'Authorization': idToken
+              },
+          })
+          if(!response.ok){
+            throw new Error(response.status)
+          } else {
+              this.setState({
+                episodes: await response.json()
+              }, () => {
+                resolve(false)
+              })
+          }
+            
+
+        } catch (error) {
+            reject(new Error(error))
+            console.error('error:', error)
+      }
+      })
+  })
+}
+
+getSharedEpisodes = async () => {
+  //console.log('debug connections: getSharedEpisodes running idToken', this.state.idToken)
+  return new Promise(async (resolve, reject) => {
+    if(this.state.getSharedEpisodesRan === undefined) {
+    this.setState({
+      getSharedEpisodesRan: true
+    })
+  }
+  this.getAuthToken().then( async (idToken) => {
     try {
-      let response = await fetch(`${url}/projects`,   {
+      let response = await fetch(`${url}/shared/episodes`, {
           method: 'GET',
           headers: {
             'content-type': 'application/json',
-            'Authorization': this.state.idToken
+            'Authorization': idToken
           },
-        })
+      })
       if(!response.ok){
-        
         throw new Error(response.status)
-          
+      } else {
+          this.setState({
+            sharedEpisodes: await response.json()
+          }, () => {
+            resolve(true)
+          })
       }
-      else {
-        //console.log('proj response', await response.json())
-        this.setState({
-          projects: await response.json()
-        }, () => {
-          resolve(false)
-        })
         
-      }
 
     } catch (error) {
-      //console.log('Error fetching projects this.state.idToken', this.state.idToken)
-      reject(new Error(error))
-      //console.error('error:', error)
-    }
+        reject(new Error(error))
+        console.error('error:', error)
+  }
   })
   
-  
+  })
+     
 }
+
+getAuthToken = async () => {
+  //console.log('details debug flow: get auth token running')
+  return new Promise(async (resolve, reject) => {
+    const idToken = await firebaseAppAuth.currentUser.getIdToken(/* forceRefresh */ true)
+
+    if(idToken) {
+
+      this.setState({
+        idToken: idToken
+      })
+
+      resolve(idToken)
+
+    } else {
+      reject('error retrieving idToken')
+    }
+
+  })
+  //console.log(`idToken in getAuthToken ${idToken}`)
+
+}
+
 
 getProjectCharacters = async (project_id, sharedProj, episode_id) => {
     let response
    
     //console.log('new char added getProjectCharacters running')
-    try {
+    this.getAuthToken().then( async (idToken) => {
 
-      if(sharedProj === undefined || sharedProj === false) {
-        response = await fetch(`${url}/characters/${project_id}/${episode_id}`,   {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json',
-            'Authorization': this.state.idToken
-          }
-        })
-      } else {
-          //console.log(`shared route project_id ${this.state.project_id}`)
-          response = await fetch(`${url}/shared/characters/${project_id}/${episode_id}`,   {
+       try {
+
+        if(sharedProj === undefined || sharedProj === false) {
+          response = await fetch(`${url}/characters/${project_id}/${episode_id}`,   {
             method: 'GET',
             headers: {
               'content-type': 'application/json',
-              'Authorization': this.state.idToken
+              'Authorization': idToken
             }
-        })
-      }
-      
-      if(!response.ok){
-        throw new Error(response.status)
-      } else {
-        this.setState({
-          projCharacters: await response.json()
-        })
-      }
-    } catch(error) {
-      console.error('error:', error)
+          })
+        } else {
+            //console.log(`shared route project_id ${this.state.project_id}`)
+            response = await fetch(`${url}/shared/characters/${project_id}/${episode_id}`,   {
+              method: 'GET',
+              headers: {
+                'content-type': 'application/json',
+                'Authorization': idToken
+              }
+          })
+        }
+        
+        if(!response.ok){
+          throw new Error(response.status)
+        } else {
+          this.setState({
+            projCharacters: await response.json()
+          })
+        }
+      } catch(error) {
+        console.error('error:', error)
     }
+
+    })
+   
 }
 
 handleSearchUpdate = async (currentAct, currentStep, searchTerm) => {
@@ -375,36 +401,40 @@ handleSearchUpdate = async (currentAct, currentStep, searchTerm) => {
 
 getProjectScenes = async (project_id, sharedProj, episode_id) => {
   let sceneResponse
-    try {
-      if(sharedProj === false ) {
-        sceneResponse = await fetch(`${url}/scenes/${project_id}/${episode_id}`,   {
-          method: 'GET',
-          headers: {
-            'content-type': 'application/json',
-            'Authorization': await this.getAuthToken()
-          }
-        })
+    this.getAuthToken().then( async (idToken) => {
 
-      } else {
-          sceneResponse = await fetch(`${url}/shared/scenes/${project_id}/${episode_id}` ,   {
+      try {
+        if(sharedProj === false ) {
+          sceneResponse = await fetch(`${url}/scenes/${project_id}/${episode_id}`,   {
             method: 'GET',
             headers: {
               'content-type': 'application/json',
-              'Authorization': await this.getAuthToken()
+              'Authorization': idToken
             }
           })
+
+        } else {
+            sceneResponse = await fetch(`${url}/shared/scenes/${project_id}/${episode_id}` ,   {
+              method: 'GET',
+              headers: {
+                'content-type': 'application/json',
+                'Authorization': idToken
+              }
+            })
+        }
+        
+        if(!sceneResponse.ok){
+          throw new Error(sceneResponse.status)
+        } else {
+          this.setState({
+            projScenes: await sceneResponse.json()
+          })
+        }
+      } catch(error) {
+        console.error('error:', error)
       }
-      
-      if(!sceneResponse.ok){
-        throw new Error(sceneResponse.status)
-      } else {
-        this.setState({
-          projScenes: await sceneResponse.json()
-        })
-      }
-    } catch(error) {
-      console.error('error:', error)
-    }
+
+    })
 }
 
 
@@ -443,7 +473,7 @@ handleGoogleLogin = async (history) => {
         uid: result.user.uid, 
       }, async () => {
           history.push('/writual')
-          //this.getAuthToken()
+          this.getAuthToken()
           setTimeout(() => {
             this.getAllUserProjects()
           }, 500)
@@ -853,7 +883,7 @@ handleEpFormSubmit = async (e, history) => {
 
 //Validate all form inputs have been changed
 handleFormSubmit = async (e, history) => {
-
+  console.log('add Project ran')
   e.preventDefault()
   const { author,
           title,
@@ -881,7 +911,7 @@ handleFormSubmit = async (e, history) => {
       framework: framework.value
     }
 
-    //console.log('new project in handle submit', newProject)
+    console.log('new project in handle submit', newProject)
     const authToken = await this.getAuthToken()
     //console.log('authToekn', authToken)
     if(this.state.projects.find(proj => proj.title === newProject.title) === undefined ) {
@@ -1254,7 +1284,7 @@ handleFormReset = (e) => {
   }
 
   onTabClick = (e, tab) => {
-    //console.log('tab', tab)
+    console.log('tab', tab)
     this.setState({
       currentTab: tab,
     })
@@ -1469,7 +1499,7 @@ handleFormReset = (e) => {
     //console.log(`open user chat uni_id ${uni_id}`)
     e.stopPropagation()
     
-    const chats = this.state.openChats
+    const chats = []
     const chat = {
       title: title,
       recipient_uid: recipient_uid,

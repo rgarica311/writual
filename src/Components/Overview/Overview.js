@@ -32,19 +32,20 @@ export default class Overview extends Component {
         //console.log('render overview')
         const styles = StyleSheet.create({
             overviewElContainer: {
-                width: '90%',
+                width: '100%',
                 minWidth: 275,
-                height: '90%',
-                //justifyContent: 'space-between',
+                height: '95%',
+                justifyContent: 'space-evenly',
                 //alignItems: 'center',
                 backgroundColor: 'white',
                 borderRadius: 8,
                 overFlowY: 'auto',
                 filter: 'drop-shadow(0 0 .25rem grey)',
-                alignSelf: 'flex-start',
+                //alignSelf: 'flex-start',
                 overflowY: 'auto',
-                flexDirection: "column",
-                padding: 10
+                flexDirection: "row",
+                padding: 10,
+                marginTop: 25
 
             },
 
@@ -72,40 +73,40 @@ export default class Overview extends Component {
                 fontWeight: 'bold',
                 fontSize: 20,
                 alignItems: 'center',
-                justifyContent: 'center',
                 display: 'flex',
                 height: 55,
                 minWidth: 170,
-                backgroundColor: darkGunMetal,
-                color: 'white'
+                color: 'black'
                 
 
             },
 
             text: {
-                height: 55,
                 //width: 500,
                 fontSize: 20,
                 alignItems: 'center',
                 paddingLeft: 10,
                 display: 'flex',
                 flex: 1, 
-                backgroundColor: whiteSmoke, 
-                fontFamily: 'Courier'
-                //borderBottomWidth: 1,
-               //borderBottomColor: 'black'
+                fontFamily: 'Courier',
+                borderBottomWidth: 1,
+                borderBottomColor: 'lightgray',
+                padding: 5,
+                width: "100%"
             },
 
             textLogline: {
                 //width: 800,
+                width: "100%",
                 fontSize: 20,
                 alignItems: 'center',
                 paddingLeft: 10,
                 display: 'flex',
-                height: 55,
                 flex: 1, 
-                backgroundColor: whiteSmoke, 
-                fontFamily: 'Courier'
+                padding: 5,
+                fontFamily: 'Courier',
+                borderBottomWidth: 1,
+                borderBottomColor: 'lightgray'
 
             },
             
@@ -117,7 +118,7 @@ export default class Overview extends Component {
 
             elTwenty: {
                 flexDirection: 'row',
-                width: '50%',
+                width: '100%',
                 height: 'max-content'
               
             },
@@ -127,131 +128,148 @@ export default class Overview extends Component {
                 width: '100%',
             }, 
 
-            otherDetails: {
+            details: {
                 width: "100%",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                height: 165
+                height: 850,
+                flexDirection: "column",
+                justifyContent: "space-evenly",
                 //justifyContent: "space-between"
-            }
+            },
+
+             overviewHeader: {
+                fontSize: 40,
+                fontWeight: 'bold',
+                fontFamily: 'Roboto Slab',
+                color: "#15273D",
+                marginBottom: 15,
+                marginTop: 15,
+            },
         })
         return(
             <WritualContext.Consumer>
             {(context) => (
                 context.currentProj !== undefined
                 ?   <View style={styles.overviewElContainer}>
-                        <View style={styles.titleLog}>
-                            <View style={styles.elTwentyLog}>
-                                <Text style={styles.label}>Title: </Text>
-                                <Text style={styles.text}>{context.currentProj}</Text>
+                        <View style={{width: "45%", height: "100%"}}>
+                            <View style={{ minWidth: 180, flexDirection: "row", alignSelf: "center" }}>
+                                <Text style={styles.overviewHeader}>
+                                    {context.currentProj} 
+                                </Text>
                             </View>
+                            <View style={styles.details}>
+                                <View style={styles.elTwentyLog}>
+                                    <Text style={styles.label}>Title: </Text>
+                                    <Text style={styles.text}>{context.currentProj}</Text>
+                                </View>
 
-                            <View style={styles.elTwentyLog}>
-                                <Text style={styles.label}>Logline: </Text>
-                                {
+                                <View style={styles.elTwentyLog}>
+                                    <Text style={styles.label}>Logline: </Text>
+                                    {
+                                        context.sharedProjClicked === true
+                                            ? context.isEpisode === true 
+                                                ? <Text style={styles.textLogline}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).logline}</Text>
+
+                                                : <Text style={styles.textLogline}>{context.sharedProjects.find(obj => obj.title === context.currentProj).logline}</Text>
+
+                                            : <Text style={styles.textLogline}>{context.currentProjFormat === 'Episode' 
+                                                        ? context.episodes.find(obj => obj.episode_title === context.currentProj).logline  
+                                                        : context.projects.find(obj => obj.title === context.currentProj).logline }</Text>
+                                    }
+                                    
+                                </View>
+
+                                <View style={styles.elTwenty}>
+                                    <Text style={styles.label}>Written By: </Text>
+                                    {
+                                        context.sharedProjClicked === true
+                                            ? context.isEpisode === true
+                                                ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).author}</Text>
+
+                                                : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).author}</Text>
+
+                                            : <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
+                                                                ? context.episodes.find(obj => obj.episode_title === context.currentProj).author 
+                                                                : context.projects.find(obj => obj.title === context.currentProj).author}</Text>
+                                    }  
+                                </View>
+
+                                <View style={styles.elTwenty}>
+                                    <Text style={styles.label}>Genre: </Text>
+                                    {
                                     context.sharedProjClicked === true
-                                        ? context.isEpisode === true 
-                                            ? <Text style={styles.textLogline}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).logline}</Text>
+                                            ? context.isEpisode === true
+                                                ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).genre}</Text>
 
-                                            : <Text style={styles.textLogline}>{context.sharedProjects.find(obj => obj.title === context.currentProj).logline}</Text>
+                                                : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).genre}</Text>
 
-                                        : <Text style={styles.textLogline}>{context.currentProjFormat === 'Episode' 
-                                                    ? context.episodes.find(obj => obj.episode_title === context.currentProj).logline  
-                                                    : context.projects.find(obj => obj.title === context.currentProj).logline }</Text>
-                                }
+                                            :   <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
+                                                                ? context.episodes.find(obj => obj.episode_title === context.currentProj).genre 
+                                                                : context.projects.find(obj => obj.title === context.currentProj).genre}</Text>
+                                    } 
+                                </View>
+
+                                <View style={styles.elTwenty}>
+                                    <Text style={styles.label}>Format: </Text>
+                                    {
+                                    context.sharedProjClicked === true
+                                            ? context.isEpisode === true 
+                                                ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).projformat}</Text>
+
+                                                : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).projformat}</Text>
+
+                                            : <Text style={styles.text}>{ context.currentProjFormat === 'Episode' 
+                                                                ? context.episodes.find(obj => obj.episode_title === context.currentProj).projformat
+                                                                : context.projects.find(obj => obj.title === context.currentProj).projformat}</Text>
+                                    }
+                                </View>
+
+                                <View style={styles.elTwenty}>
+                                    <Text style={styles.label}>Budget: </Text>
+                                    {
+                                    context.sharedProjClicked === true
+                                            ? context.isEpisode === true 
+                                                ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).budget}</Text>
+
+                                                : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).budget}</Text>
+
+                                            : <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
+                                                                ? context.episodes.find(obj => obj.episode_title === context.currentProj).budget
+                                                                : context.projects.find(obj => obj.title === context.currentProj).budget}</Text>
+                                    }
+                                </View>
+
+                                <View style={styles.elTwenty}>
+                                    <Text style={styles.label}>Time Period: </Text>
+                                    {
+                                    context.sharedProjClicked === true
+                                            ? context.isEpisode === true
+                                                ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).timeperiod}</Text>
+                                                : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).timeperiod}</Text>
+
+                                            : <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
+                                                                ? context.episodes.find(obj => obj.episode_title === context.currentProj).timeperiod
+                                                                : context.projects.find(obj => obj.title === context.currentProj).timeperiod}</Text>
+                                    }
+                                </View>
+
+                                <View style={styles.elTwenty}>
+                                    <Text style={styles.label}>Similar Projects: </Text>
+                                    {
+                                    context.sharedProjClicked === true
+                                            ? context.isEpisode === true
+                                                ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).similarepisodes}</Text>
+
+                                                : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).similarprojects}</Text>
+
+                                            : <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
+                                                                ? context.episodes.find(obj => obj.episode_title === context.currentProj).similarepisodes
+                                                                : context.projects.find(obj => obj.title === context.currentProj).similarprojects}</Text>
+                                    }
+                                </View>
+                            </View>
+                           
                                 
-                            </View>
-                        </View>
-                        <View style={styles.otherDetails}>
-
-                            <View style={styles.elTwenty}>
-                                <Text style={styles.label}>Written By: </Text>
-                                {
-                                    context.sharedProjClicked === true
-                                        ? context.isEpisode === true
-                                            ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).author}</Text>
-
-                                            : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).author}</Text>
-
-                                        : <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
-                                                            ? context.episodes.find(obj => obj.episode_title === context.currentProj).author 
-                                                            : context.projects.find(obj => obj.title === context.currentProj).author}</Text>
-                                }  
-                            </View>
-
-                            <View style={styles.elTwenty}>
-                                <Text style={styles.label}>Genre: </Text>
-                                {
-                                context.sharedProjClicked === true
-                                        ? context.isEpisode === true
-                                            ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).genre}</Text>
-
-                                            : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).genre}</Text>
-
-                                        :   <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
-                                                            ? context.episodes.find(obj => obj.episode_title === context.currentProj).genre 
-                                                            : context.projects.find(obj => obj.title === context.currentProj).genre}</Text>
-                                } 
-                            </View>
-
-                            <View style={styles.elTwenty}>
-                                <Text style={styles.label}>Format: </Text>
-                                {
-                                context.sharedProjClicked === true
-                                        ? context.isEpisode === true 
-                                            ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).projformat}</Text>
-
-                                            : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).projformat}</Text>
-
-                                        : <Text style={styles.text}>{ context.currentProjFormat === 'Episode' 
-                                                            ? context.episodes.find(obj => obj.episode_title === context.currentProj).projformat
-                                                            : context.projects.find(obj => obj.title === context.currentProj).projformat}</Text>
-                                }
-                            </View>
-
-                            <View style={styles.elTwenty}>
-                                <Text style={styles.label}>Budget: </Text>
-                                {
-                                context.sharedProjClicked === true
-                                        ? context.isEpisode === true 
-                                            ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).budget}</Text>
-
-                                            : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).budget}</Text>
-
-                                        : <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
-                                                            ? context.episodes.find(obj => obj.episode_title === context.currentProj).budget
-                                                            : context.projects.find(obj => obj.title === context.currentProj).budget}</Text>
-                                }
-                            </View>
-
-                            <View style={styles.elTwenty}>
-                                <Text style={styles.label}>Time Period: </Text>
-                                {
-                                context.sharedProjClicked === true
-                                        ? context.isEpisode === true
-                                            ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).timeperiod}</Text>
-                                            : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).timeperiod}</Text>
-
-                                        : <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
-                                                            ? context.episodes.find(obj => obj.episode_title === context.currentProj).timeperiod
-                                                            : context.projects.find(obj => obj.title === context.currentProj).timeperiod}</Text>
-                                }
-                            </View>
-
-                            <View style={styles.elTwenty}>
-                                <Text style={styles.label}>Similar Projects: </Text>
-                                {
-                                context.sharedProjClicked === true
-                                        ? context.isEpisode === true
-                                            ? <Text style={styles.text}>{context.sharedEpisodes.find(obj => obj.episode_title === context.currentProj).similarepisodes}</Text>
-
-                                            : <Text style={styles.text}>{context.sharedProjects.find(obj => obj.title === context.currentProj).similarprojects}</Text>
-
-                                        : <Text style={styles.text}>{context.currentProjFormat === 'Episode' 
-                                                            ? context.episodes.find(obj => obj.episode_title === context.currentProj).similarepisodes
-                                                            : context.projects.find(obj => obj.title === context.currentProj).similarprojects}</Text>
-                                }
-                            </View>
+                            
                         </View>
 
                         <Feedback   currentProj={context.currentProj}
@@ -264,9 +282,9 @@ export default class Overview extends Component {
                                                         ? context.projects.find(proj => proj.title === context.currentProj).id
                                                         : context.episodes.find(proj => proj.episode_title === context.currentProj).project_id
                                                 : null}
-                                    episode_id={context.currentProj !== undefined
-                                                ? context.sharedProjClicked
-                                                    ? context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj) !== undefined 
+                                    episode_id={context.currentProj !== undefined && context.currentProjFormat === 'episode'
+                                                ? context.sharedEpisodes !== undefined
+                                                    ? console.log('context.sharedEpisodes: ', context.sharedEpisodes)
                                                         ? context.sharedEpisodes.find(proj => proj.episode_title === context.currentProj).id 
                                                         : null
                                                     : context.episodes.find(proj => proj.episode_title === context.currentProj) !== undefined 
@@ -282,6 +300,8 @@ export default class Overview extends Component {
                                     sharedProjects={context.sharedProjects}
                                     reviewer={context.displayName}
                                     sharedProjClicked={context.sharedProjClicked} />
+
+                        
 
                     </View>
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, TouchableHighlight, Platform} from 'react-native'
+import { Text, StyleSheet, TouchableHighlight, Platform, View } from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import WritualContext from '../../WritualContext'
 import './DetailTab.css'
@@ -37,7 +37,8 @@ export default class DetailTab extends Component {
                 width: '15%',
                 minWidth: 120,
                 padding: 5,
-                height: 80,
+                height: 70,
+                cursor: 'pointer', 
               
             },
 
@@ -49,6 +50,7 @@ export default class DetailTab extends Component {
                 minWidth: 120,
                 padding: 5,
                 height: 80,
+                cursor: 'pointer', 
                 
             },
 
@@ -97,12 +99,13 @@ export default class DetailTab extends Component {
             {(context) => (
 
                 Platform.OS === 'web' 
-                    ? <TouchableHighlight  underlayColor="rgba(0, 0, 0, 0)" 
-                                           activeOpacity={1} 
+                    ? <View  //underlayColor="rgba(0, 0, 0, 0)" 
+                                           //activeOpacity={1} 
+                                           pointerEvents="auto"
                                            style={context.currentTab === this.state.title ? styles.activeStyle : styles.tab} 
                                            onClick={e => context.onTabClick(e, this.state.title)}>
                         <Text style={context.currentTab === this.state.title ? styles.activeText : styles.tabText}>{this.state.title}</Text>
-                      </TouchableHighlight>
+                      </View>
                     : null
                 
                
