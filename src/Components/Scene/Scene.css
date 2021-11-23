@@ -1,0 +1,27 @@
+
+
+.container:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-width: 0 16px 16px 0;
+  border-style: solid;
+  border-color: #fff #fff #658E15 #658E15;
+  background: #658E15;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+  /* Firefox 3.0 damage limitation */
+  display: block; width: 0;
+}
+
+.fold:after {
+    content:"";
+    position:absolute;
+    width:100%;
+    bottom:1px;
+    z-index:-1;
+    transform:scale(.9);
+    box-shadow: 0px 0px 8px 2px #000000;
+}

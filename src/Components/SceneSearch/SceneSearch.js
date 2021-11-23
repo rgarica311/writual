@@ -23,7 +23,9 @@ export default function SceneSearch(props) {
     return (
         <View style={styles.container}>
             <FontAwesomeIcon color='white' style={{marginRight: 10}} icon={faSearch}/>
-            <TextInput onChange={e => searchScenes(e.target.value)} style={{width: '60%', height: '100%', fontSize: '22px', color: 'white'}} placeholderTextColor='white' placeholder='Type to search for scenes'/>
+            <TextInput  onChange={e => searchScenes(e.target.value)} 
+                        style={{width: '60%', height: '100%', fontSize: '22px', color: 'white'}} 
+                        placeholderTextColor='white' placeholder='Type to search for scenes'/>
         </View>
     )
 }

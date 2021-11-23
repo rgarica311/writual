@@ -187,7 +187,7 @@ export default class DetailView extends Component {
                           {
                             context.currentProj !== undefined 
                               ? this.state.acts.map(act => 
-                                  <ActContainer getProjectScenes={context.getProjectScenes} proj={context.currentProj} project_id={context.current_project_id} projScenes={context.projScenes} key={act} idToken={context.idToken} table={context.tableName} act={act} shared={context.sharedProjClicked} windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
+                                  <ActContainer getCurrentColor={context.getCurrentColor} getProjectScenes={context.getProjectScenes} proj={context.currentProj} project_id={context.current_project_id} projScenes={context.projScenes} key={act} idToken={context.idToken} table={context.tableName} act={act} shared={context.sharedProjClicked} windowWidth={this.state.windowWidth} windowHeight={this.state.windowHeight}/>
                                 )
                               : <ActContainer />
                           }

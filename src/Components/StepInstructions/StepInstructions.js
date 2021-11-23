@@ -8,14 +8,14 @@ import {
 export default function StepInstructions(props) {
     return (
         <Text style={{  fontFamily:'Varela Round', 
-                        fontSize: '1.3vw', 
+                        fontSize: '.9vw', 
                         lineHeight:'1.2em',
                         minHeight: 115,
                         padding: 10,
-                        display: 'block',
+                        display: 'flex',
                         overflowY: 'auto',
-                        flex: 1,
                         justifyContent: 'center',
+                        textAlign: 'center',
                         alignItems: 'center'}}>
                         
                         {props.instructions}

@@ -20,6 +20,8 @@ import debounce from 'lodash/debounce'
 import ErrorBoundary from './ErrorBoundary'
 import * as io from 'socket.io-client'
 import { config } from './URLS'
+import chroma from 'chroma-js';
+
 
 const url = config.API_URL
 console.log('api url', url)
@@ -232,6 +234,10 @@ getProjects =  async () => {
   })
 }
 
+getCurrentColor = (hue, saturation, value) => {
+    return chroma.hsv(hue, saturation, value).hex();
+  }
+
 getEpisodes = async () => {
   //console.log('debug connections: getEpisodes running idToken', this.state.idToken)
   return new Promise(async (resolve, reject) => {
@@ -400,6 +406,7 @@ handleSearchUpdate = async (currentAct, currentStep, searchTerm) => {
 }
 
 getProjectScenes = async (project_id, sharedProj, episode_id) => {
+  console.log('debug getting scenes')
   let sceneResponse
     this.getAuthToken().then( async (idToken) => {
 
@@ -436,8 +443,6 @@ getProjectScenes = async (project_id, sharedProj, episode_id) => {
 
     })
 }
-
-
 
 verifyEmail = async (email, message, projectName) => {
     
@@ -567,6 +572,13 @@ componentDidMount = async () => {
         })
     }
 
+  })
+
+  this.state.socket.on('scene-updated', (project_id, shared, episode_id) => {
+    console.log(`getting scenes`)
+    if(this.state.current_project_id === project_id) {
+      this.getProjectScenes(project_id, shared, episode_id)
+    }
   })
 
   this.state.socket.on('new-scene-added', (project_id, episode_id) => {
@@ -1320,7 +1332,61 @@ handleFormReset = (e) => {
     })
   }
 
-  handleAddSceneSubmit = async (currentProj, currentAct, currentStep, sharedProjectClicked, scene_heading, thesis, antithesis, synthesis) => {
+  handleUpdateSceneSubmit = async (updatedScene, sharedProjectClicked, version) => {
+    console.log('updatedScene: ', updatedScene)
+    return new Promise(async (resolve, reject) => {
+      try {
+        let response = await fetch(`${url}/scenes/update`,   {
+            method: 'PUT',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': await this.getAuthToken()
+            },
+            body: JSON.stringify(updatedScene)
+        })
+        if(!response.ok) {
+          throw new Error(response.status)
+          reject('Error updating scene')
+        } else {
+          this.getProjectScenes(this.state.current_project_id, sharedProjectClicked, this.state.episode_id)
+          this.state.socket.emit('scene-added', this.state.current_project_id, this.state.episode_id)
+          resolve('Scene Updated')
+        }
+
+      } catch(err) {
+          console.error(`error: ${err}`)
+      }
+    })
+    
+  }
+
+  handleUpdateDetails = async (details, sharedProjectClicked, scene_id) => {
+
+    const update = {
+      details: details,
+      id: scene_id
+    }
+
+    try {
+      let resposne = await fetch(`${url}/scenes/details`, {
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': await this.getAuthToken()
+        },
+        body: JSON.stringify(update)
+      }).then(() => {
+            this.getProjectScenes(this.state.current_project_id, sharedProjectClicked, this.state.episode_id)
+            this.state.socket.emit('scene-added', this.state.current_project_id, this.state.episode_id)
+      })
+    }
+    catch(err) {
+      console.error('Error updating scene details: ', err)
+    }
+
+  }
+
+  handleAddSceneSubmit = async (currentProj, currentAct, currentStep, sharedProjectClicked, sceneNum, plot, scene_heading, thesis, antithesis, synthesis) => {
     //e.stopPropagation()
     //console.log(`debug handleSceneSubmit currentStep ${currentStep}`)
     const shared = []
@@ -1345,7 +1411,10 @@ handleFormReset = (e) => {
             : this.state.uid,
       project_id: this.state.current_project_id,
       episode_id: this.state.isEpisode ? this.state.episode_id : null,
-      shared: shared || null
+      shared: shared || null,
+      scene_number: sceneNum,
+      plot: plot,
+      version: 1
     }
     
     try {
@@ -1978,6 +2047,7 @@ handleFormReset = (e) => {
       getProjectScenes: this.getProjectScenes,
       getSteps: this.getSteps,
       getUnread: this.getUnread,
+      getCurrentColor: this.getCurrentColor,
       goHome: this.goHome,
       handleAddCharFormSubmit: this.handleAddCharFormSubmit,
       handleAddSceneSubmit: this.handleAddSceneSubmit,
@@ -2000,6 +2070,8 @@ handleFormReset = (e) => {
       handleUpdateLogline: this.handleUpdateLogline,
       handleUpdateSimilarProjects: this.handleUpdateSimilarProjects,
       handleUpdateTimePeriod: this.handleUpdateTimePeriod,
+      handleUpdateSceneSubmit: this.handleUpdateSceneSubmit, 
+      handleUpdateDetails: this.handleUpdateDetails,
       handleUpdateTitle: this.handleUpdateTitle,
       handleUserImgClick: this.handleUserImgClick,
       hideEpisode: this.hideEpisode,
@@ -2056,6 +2128,7 @@ handleFormReset = (e) => {
       signOut: this.state.signOut,
       similarepisodes: this.state.similarepisodes,
       similarProjects: this.state.similarprojects,
+      socket: this.state.socket, 
       steps: this.state.steps,
       tableName: this.state.tableName,
       tableName: this.state.tableName,
