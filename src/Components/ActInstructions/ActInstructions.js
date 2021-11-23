@@ -134,6 +134,7 @@ export default class ActInstructions extends Component {
             <WritualContext.Consumer>
             {(context) => (
                 <View style={styles.actInstructionsContainer}>
+                    {this.props.children}
                     <Text style={styles.text}> {context.sharedProjClicked === false 
                                                     ? context.currentProjFormat === 'Episode' 
                                                         ? context.episodes.find(obj => obj.episode_title === context.currentProj).framework 
